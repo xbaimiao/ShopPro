@@ -1,0 +1,68 @@
+# 商店类型
+# buy 为出售商店
+# sell 为收购商店
+type: sell
+name: "默认收购商店"
+title: "系统收购商店"
+# 物品摆放顺序
+slots:
+  - 'NNNNNNNNN'
+  - 'NAB     N'
+  - 'NNNNNNNNN'
+items:
+  N:
+    material: GLASS_PANE
+    name: ' '
+    lore:
+      - ' '
+    # 是否为商品
+    is-commodity: false
+  # 普通物品收购示例
+  A:
+    material: STONE
+    name: '石头'
+    # 每日限出售
+    limit: 5000
+    # 每个玩家限出售
+    limit-player: 500
+    # 物品金额
+    price: 1
+    lore:
+      - '&e| &7这里可以出售你背包里面的&6 ${name}'
+      - '&e| &7收购单价 &6${price}'
+      - '&e| &7你的余额 &6${money}'
+      - ''
+      - '&e|&6 左击 &7出售 &6单个'
+      - '&e|&6 右击 &7出售 &6一组 &7获得 &6${price64}'
+      - '&e|&6 Shift + 右击 &7出售 &6背包所有 &7获得${priceAll}'
+      - ''
+      - '&e| &7限售公示:'
+      - '&e| &7每人限制出售: ${limit}'
+      - '&e| &7全服限制出售: ${allLimit}'
+      - '&e| &7您已出售: ${limit-player}'
+      - '&e| &7全服剩余: ${limit-server}'
+  # itemsadder 物品收购示例
+  # 需要使用IA:前缀 中间为物品材质 后面为物品customData,如果是药水需要在添加一个 CustomPotionColor
+  B:
+    material: 'IA:PAPER:10001'
+    name: 'IA物品名'
+    # 每日限出售
+    limit: 5000
+    # 每个玩家限出售
+    limit-player: 500
+    # 物品金额
+    price: 1
+    lore:
+      - '&e| &7这里可以出售你背包里面的&6 ${name}'
+      - '&e| &7收购单价 &6${price}'
+      - '&e| &7你的余额 &6${money}'
+      - ''
+      - '&e|&6 左击 &7出售 &6单个'
+      - '&e|&6 右击 &7出售 &6一组 &7获得 &6${price64}'
+      - '&e|&6 Shift + 右击 &7出售 &6背包所有 &7获得${priceAll}'
+      - ''
+      - '&e| &7限售公示:'
+      - '&e| &7每人限制出售: ${limit}'
+      - '&e| &7全服限制出售: ${allLimit}'
+      - '&e| &7您已出售: ${limit-player}'
+      - '&e| &7全服剩余: ${limit-server}'
