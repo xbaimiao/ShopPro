@@ -1,5 +1,6 @@
 package com.github.xbaimiao.shoppro.core
 
+import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
 import taboolib.expansion.createHelper
 import taboolib.platform.util.onlinePlayers
+import taboolib.platform.util.sendLang
 
 @CommandHeader("shoppro", aliases = ["sp"], permissionDefault = PermissionDefault.TRUE)
 object Commands {
@@ -36,6 +38,22 @@ object Commands {
                     shop.open(player)
                 }
             }
+        }
+    }
+
+    @CommandBody(permission = "admin")
+    val resetLimit = subCommand {
+        execute<CommandSender> { sender, _, _ ->
+            ShopPro.database.reset()
+            sender.sendLang("reset")
+        }
+    }
+
+    @CommandBody(permission = "admin")
+    val reload = subCommand {
+        execute<CommandSender> { sender, _, _ ->
+            ShopPro.reload()
+            sender.sendLang("reload")
         }
     }
 

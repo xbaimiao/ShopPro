@@ -1,5 +1,6 @@
 package com.github.xbaimiao.shoppro.core.item
 
+import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import com.github.xbaimiao.shoppro.core.vault.Vault
 import com.github.xbaimiao.shoppro.core.vault.VaultImpl
@@ -18,13 +19,14 @@ interface Item {
     val name: String
     val vanilla: Boolean
     val commands: List<String>
+    val shop: Shop
 
     val vault: Vault
         get() = VaultImpl
 
     fun isCommodity(): Boolean
     fun buildItem(): ItemStack
-    fun update(player: Player, itemStack: ItemStack)
+    fun update(player: Player): ItemStack
 
     fun exeCommands(player: Player) {
         commands.map { it.replace("%player%", player.name) }.forEach { command ->

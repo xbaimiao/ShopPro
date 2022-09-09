@@ -1,0 +1,9 @@
+# 请勿修改此项
+date: 0
+mysql:
+  enable: false
+  host: localhost
+  port: 3306
+  user: "root"
+  password: "123456"
+  database: "shoppro"

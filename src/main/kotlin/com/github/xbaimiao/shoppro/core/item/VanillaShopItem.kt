@@ -1,5 +1,6 @@
 package com.github.xbaimiao.shoppro.core.item
 
+import com.github.xbaimiao.shoppro.core.shop.Shop
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -12,7 +13,8 @@ class VanillaShopItem(
     override val name: String,
     override val lore: List<String>,
     override val vanilla: Boolean,
-    override val commands: List<String>
+    override val commands: List<String>,
+    override val shop: Shop
 ) : ShopItem() {
 
     override fun vanillaItem(): ItemStack {

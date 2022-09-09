@@ -1,7 +1,9 @@
 package com.github.xbaimiao.shoppro.core.shop
 
+import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.api.ShopProBuyEvent
 import com.github.xbaimiao.shoppro.api.ShopProSellEvent
+import com.github.xbaimiao.shoppro.core.database.LimitData
 import com.github.xbaimiao.shoppro.core.item.*
 import org.bukkit.Bukkit
 import org.bukkit.configuration.Configuration
@@ -38,7 +40,8 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             section.getString("$key.name")!!.colored(),
                             section.getStringList("$key.lore").colored(),
                             section.getBoolean("$key.vanilla", true),
-                            section.getStringList("$key.commands")
+                            section.getStringList("$key.commands"),
+                            this
                         )
                     )
                 } else {
@@ -52,7 +55,8 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             section.getString("$key.name")!!.colored(),
                             section.getStringList("$key.lore").colored(),
                             section.getBoolean("$key.vanilla", true),
-                            section.getStringList("$key.commands")
+                            section.getStringList("$key.commands"),
+                            this
                         )
                     )
                 }
@@ -64,7 +68,8 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                         section.getString("$key.name")!!.colored(),
                         key[0],
                         section.getBoolean("$key.vanilla", true),
-                        section.getStringList("$key.commands")
+                        section.getStringList("$key.commands"),
+                        this
                     )
                 )
             }
@@ -91,9 +96,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 it.isCancelled = true
             }
             for (item in this@ShopImpl.items) {
-                val itemStack = item.buildItem()
-                item.update(player, itemStack)
-                set(item.key, itemStack)
+                set(item.key, item.update(player))
                 if (item is ShopItem) {
                     if (getType() == ShopType.BUY) {
                         onClick(item.key) { event ->
@@ -106,7 +109,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                                 else -> 1
                             }
                             buy(amount, item, player)
-                            event.currentItem?.let { item.update(player, it) }
+                            event.currentItem?.let {
+                                event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
+                            }
                         }
                     }
                     if (getType() == ShopType.SELL) {
@@ -120,7 +125,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                                 else -> 1
                             }
                             sell(amount, item, player)
-                            event.currentItem?.let { item.update(player, it) }
+                            event.currentItem?.let {
+                                event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
+                            }
                         }
                     }
                 } else {
@@ -133,8 +140,15 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     }
 
     private fun buy(amount: Int, item: ShopItem, player: Player) {
-        if (item.isLimit()){
-            // TODO
+        if (item.isLimit()) {
+            if (ShopPro.database.getPlayerAlreadyData(player, item).buy + amount > item.limitPlayer) {
+                player.sendLang("buy-limit-player", item.limitPlayer)
+                return
+            }
+            if (ShopPro.database.getServerAlreadyData(item).buy + amount > item.limitServer) {
+                player.sendLang("buy-limit-player", item.limitServer)
+                return
+            }
         }
         if (item.vault.takeMoney(player, item.price * amount)) {
             if (item.vanilla) {
@@ -143,6 +157,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 player.giveItem(vanilla)
             }
             Bukkit.getPluginManager().callEvent(ShopProBuyEvent(item, amount, player))
+            ShopPro.database.addAmount(item, player, LimitData(amount.toLong(), 0L))
             item.exeCommands(player)
             player.sendLang("buy-item", amount, item.name, item.price * amount)
         } else {
@@ -151,13 +166,21 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     }
 
     private fun sell(amount: Int, item: ShopItem, player: Player) {
-        if (item.isLimit()){
-            // TODO
+        if (item.isLimit()) {
+            if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.limitPlayer) {
+                player.sendLang("sell-limit-player", item.limitPlayer)
+                return
+            }
+            if (ShopPro.database.getServerAlreadyData(item).sell + amount > item.limitServer) {
+                player.sendLang("sell-limit-server", item.limitServer)
+                return
+            }
         }
         if (player.inventory.hasItem(amount) { item.equal(it) }) {
             player.inventory.takeItem(amount) { item.equal(it) }
             item.vault.giveMoney(player, item.price * amount)
             Bukkit.getPluginManager().callEvent(ShopProSellEvent(item, amount, player))
+            ShopPro.database.addAmount(item, player, LimitData(0L, amount.toLong()))
             player.sendLang("sell-item", amount, item.name, item.price * amount)
         } else {
             player.sendLang("not-item")

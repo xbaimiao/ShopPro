@@ -1,5 +1,6 @@
 package com.github.xbaimiao.shoppro.core.item
 
+import com.github.xbaimiao.shoppro.core.shop.Shop
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
@@ -14,12 +15,13 @@ class ItemsAdderShopItem(
     override val name: String,
     override val lore: List<String>,
     override val vanilla: Boolean,
-    override val commands: List<String>
+    override val commands: List<String>,
+    override val shop: Shop
 ) : ShopItem() {
 
     override val material: Material
 
-    private val custom: Int
+    val custom: Int
 
     private var customPotionColor: Int? = null
 

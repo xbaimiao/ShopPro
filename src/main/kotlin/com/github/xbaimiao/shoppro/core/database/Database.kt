@@ -8,21 +8,25 @@ interface Database {
     /**
      * 获取该物品该玩家今日已购买多少次了
      */
-    fun getPlayerLimit(player: Player, item: Item): Long
+    fun getPlayerAlreadyData(player: Player, item: Item): LimitData
 
     /**
      * 设置该物品该玩家今日已购买多少次了
      */
-    fun setPlayerLimit(player: Player, item: Item, amount: Long)
+    fun setPlayerAlreadyData(player: Player, item: Item, amount: LimitData)
 
     /**
      * 获取该物品今日已购买多少次了
      */
-    fun getServerLimit(item: Item)
+    fun getServerAlreadyData(item: Item): LimitData
 
     /**
      * 设置该物品今日已购买多少次了
      */
-    fun setServerLimit(item: Item, amount: Long)
+    fun setServerAlreadyData(item: Item, amount: LimitData)
+
+    fun addAmount(item: Item, player: Player, amount: LimitData)
+
+    fun reset()
 
 }
