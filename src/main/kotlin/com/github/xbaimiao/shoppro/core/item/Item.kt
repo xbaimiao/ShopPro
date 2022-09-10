@@ -45,6 +45,8 @@ interface Item {
                     override fun hasPermission(p0: Permission) = true
                     override fun hasPermission(p0: String) = true
                 }, command.substring(5))
+            } else if (command == "close" || command.startsWith("[close]")) {
+                player.closeInventory()
             }
         }
     }

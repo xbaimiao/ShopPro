@@ -4,46 +4,46 @@ import com.github.xbaimiao.shoppro.core.shop.Shop
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.platform.util.ItemBuilder
+import java.util.*
 
-class ItemsAdderShopItem(
+class HeadShopItem(
     override val key: Char,
+    headString: String,
     override val price: Double,
-    iaMaterial: String,
     override val limitServer: Long,
     override val limitPlayer: Long,
     override val name: String,
     override val lore: List<String>,
     override val vanilla: Boolean,
     override val commands: List<String>,
-    override val shop: Shop
+    override val shop: Shop,
+    val item: Material
 ) : ShopItem() {
 
-    override val material: Material
+    override val material: Material = XMaterial.PLAYER_HEAD.parseMaterial()!!
 
-    val custom: Int
+    val head: String
 
     init {
-        iaMaterial.split(":").let { strings ->
-            material = XMaterial.matchXMaterial(strings[1]).get().parseMaterial()!!
-            custom = strings[2].toInt()
-        }
-    }
-
-    override fun equal(itemStack: ItemStack): Boolean {
-        return itemStack.type == material && itemStack.itemMeta?.customModelData == custom
+        head = headString.substring(5)
     }
 
     override fun vanillaItem(): ItemStack {
         return taboolib.platform.util.buildItem(material) {
-            this.customModelData = custom
+            skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
         }
+    }
+
+    override fun equal(itemStack: ItemStack): Boolean {
+        return itemStack.itemMeta?.hasLore() == false && itemStack.type == item
     }
 
     override fun buildItem(): ItemStack {
         return taboolib.platform.util.buildItem(material) {
-            this.name = this@ItemsAdderShopItem.name
-            this.lore.addAll(this@ItemsAdderShopItem.lore)
-            this.customModelData = custom
+            this.name = this@HeadShopItem.name
+            this.lore.addAll(this@HeadShopItem.lore)
+            skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
         }
     }
 

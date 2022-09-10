@@ -48,6 +48,22 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                                 this
                             )
                         )
+                    } else if (materialString.startsWith("HEAD:")) {
+                        items.add(
+                            HeadShopItem(
+                                key[0],
+                                section.getString("$key.material")!!,
+                                section.getDouble("$key.price"),
+                                section.getLong("$key.limit"),
+                                section.getLong("$key.limit-player"),
+                                section.getString("$key.name")!!.colored(),
+                                section.getStringList("$key.lore").colored(),
+                                section.getBoolean("$key.vanilla", true),
+                                section.getStringList("$key.commands"),
+                                this,
+                                section.getString("item")!!.parseToMaterial()
+                            )
+                        )
                     } else {
                         items.add(
                             VanillaShopItem(
@@ -67,7 +83,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 } else {
                     items.add(
                         ItemImpl(
-                            section.getString("$key.material")!!.parseToMaterial(),
+                            section.getString("$key.material")!!,
                             section.getStringList("$key.lore").colored(),
                             section.getString("$key.name")!!.colored(),
                             key[0],
