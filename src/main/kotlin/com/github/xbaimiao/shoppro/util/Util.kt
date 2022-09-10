@@ -5,12 +5,15 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.info
 import taboolib.platform.util.isNotAir
 import java.text.DecimalFormat
 
 object Util {
 
-    private val hasPapi by lazy { Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null }
+    private val hasPapi by lazy { Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null }.also {
+        info("PlaceholderAPI Hook")
+    }
 
     fun Double.format(): Double {
         val df = DecimalFormat("#0.00")

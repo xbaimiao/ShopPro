@@ -10,6 +10,7 @@ import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.Bukkit
 import org.bukkit.configuration.Configuration
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.info
 import taboolib.library.xseries.parseToMaterial
 import taboolib.module.chat.colored
 import taboolib.module.ui.ClickType
@@ -29,51 +30,55 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     init {
         val section = configuration.getConfigurationSection("items")!!
         for (key in section.getKeys(false)) {
-            if (section.getBoolean("$key.is-commodity", true)) {
-                val materialString = section.getString("$key.material")!!
-                if (materialString.startsWith("IA")) {
-                    items.add(
-                        ItemsAdderShopItem(
-                            key[0],
-                            section.getDouble("$key.price"),
-                            materialString,
-                            section.getLong("$key.limit"),
-                            section.getLong("$key.limit-player"),
-                            section.getString("$key.name")!!.colored(),
-                            section.getStringList("$key.lore").colored(),
-                            section.getBoolean("$key.vanilla", true),
-                            section.getStringList("$key.commands"),
-                            this
+            try {
+                if (section.getBoolean("$key.is-commodity", true)) {
+                    val materialString = section.getString("$key.material")!!
+                    if (materialString.startsWith("IA")) {
+                        items.add(
+                            ItemsAdderShopItem(
+                                key[0],
+                                section.getDouble("$key.price"),
+                                materialString,
+                                section.getLong("$key.limit"),
+                                section.getLong("$key.limit-player"),
+                                section.getString("$key.name")!!.colored(),
+                                section.getStringList("$key.lore").colored(),
+                                section.getBoolean("$key.vanilla", true),
+                                section.getStringList("$key.commands"),
+                                this
+                            )
                         )
-                    )
+                    } else {
+                        items.add(
+                            VanillaShopItem(
+                                key[0],
+                                section.getString("$key.material")!!.parseToMaterial(),
+                                section.getDouble("$key.price"),
+                                section.getLong("$key.limit"),
+                                section.getLong("$key.limit-player"),
+                                section.getString("$key.name")!!.colored(),
+                                section.getStringList("$key.lore").colored(),
+                                section.getBoolean("$key.vanilla", true),
+                                section.getStringList("$key.commands"),
+                                this
+                            )
+                        )
+                    }
                 } else {
                     items.add(
-                        VanillaShopItem(
-                            key[0],
+                        ItemImpl(
                             section.getString("$key.material")!!.parseToMaterial(),
-                            section.getDouble("$key.price"),
-                            section.getLong("$key.limit"),
-                            section.getLong("$key.limit-player"),
-                            section.getString("$key.name")!!.colored(),
                             section.getStringList("$key.lore").colored(),
+                            section.getString("$key.name")!!.colored(),
+                            key[0],
                             section.getBoolean("$key.vanilla", true),
                             section.getStringList("$key.commands"),
                             this
                         )
                     )
                 }
-            } else {
-                items.add(
-                    ItemImpl(
-                        section.getString("$key.material")!!.parseToMaterial(),
-                        section.getStringList("$key.lore").colored(),
-                        section.getString("$key.name")!!.colored(),
-                        key[0],
-                        section.getBoolean("$key.vanilla", true),
-                        section.getStringList("$key.commands"),
-                        this
-                    )
-                )
+            } catch (e: Throwable) {
+                info("在加载Shop: ${getName()} 时,物品: $key 加载出现异常,跳过加载")
             }
         }
     }
