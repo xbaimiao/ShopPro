@@ -23,7 +23,7 @@ object VaultImpl : Vault {
     }
 
     override fun getMoney(player: Player): Double {
-        return VaultService.economy!!.getBalance(player)
+        return VaultService.economy!!.getBalance(player).format()
     }
 
 

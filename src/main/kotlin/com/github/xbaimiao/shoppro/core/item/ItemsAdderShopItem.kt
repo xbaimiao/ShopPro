@@ -4,7 +4,6 @@ import com.github.xbaimiao.shoppro.core.shop.Shop
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
-import taboolib.module.nms.getItemTag
 
 class ItemsAdderShopItem(
     override val key: Char,
@@ -23,13 +22,11 @@ class ItemsAdderShopItem(
 
     val custom: Int
 
-    private var customPotionColor: Int? = null
 
     init {
         iaMaterial.split(":").let { strings ->
             material = XMaterial.matchXMaterial(strings[1]).get().parseMaterial()!!
             custom = strings[2].toInt()
-            strings.getOrNull(3)?.let { customPotionColor = it.toInt() }
         }
     }
 
@@ -48,13 +45,6 @@ class ItemsAdderShopItem(
             this.name = this@ItemsAdderShopItem.name
             this.lore.addAll(this@ItemsAdderShopItem.lore)
             this.customModelData = custom
-        }.also { item ->
-            customPotionColor?.let {
-                val tag = item.getItemTag()
-                tag.putDeep("meta.CustomPotionColor.data", it)
-                tag.putDeep("meta.CustomPotionColor.type", "INT")
-                tag.saveTo(item)
-            }
         }
     }
 
