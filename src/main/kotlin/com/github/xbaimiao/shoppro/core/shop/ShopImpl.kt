@@ -1,6 +1,7 @@
 package com.github.xbaimiao.shoppro.core.shop
 
 import com.github.xbaimiao.shoppro.ShopPro
+import com.github.xbaimiao.shoppro.Util.howManyItems
 import com.github.xbaimiao.shoppro.api.ShopProBuyEvent
 import com.github.xbaimiao.shoppro.api.ShopProSellEvent
 import com.github.xbaimiao.shoppro.core.database.LimitData
@@ -106,7 +107,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             val amount = when (event.clickEvent().click) {
                                 org.bukkit.event.inventory.ClickType.LEFT -> 1
                                 org.bukkit.event.inventory.ClickType.RIGHT -> 64
-                                else -> 1
+                                else -> return@onClick
                             }
                             buy(amount, item, player)
                             event.currentItem?.let {
@@ -122,7 +123,13 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             val amount = when (event.clickEvent().click) {
                                 org.bukkit.event.inventory.ClickType.LEFT -> 1
                                 org.bukkit.event.inventory.ClickType.RIGHT -> 64
-                                else -> 1
+                                org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
+                                    player.inventory.howManyItems {
+                                        item.equal(it)
+                                    }
+                                }
+
+                                else -> return@onClick
                             }
                             sell(amount, item, player)
                             event.currentItem?.let {

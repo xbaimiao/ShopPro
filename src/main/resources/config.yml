@@ -1,5 +1,6 @@
 # 请勿修改此项
 date: 0
+# 启用mysql
 mysql:
   enable: false
   host: localhost

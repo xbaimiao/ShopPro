@@ -1,6 +1,8 @@
 package com.github.xbaimiao.shoppro.core.item
 
 import com.github.xbaimiao.shoppro.ShopPro
+import com.github.xbaimiao.shoppro.Util.format
+import com.github.xbaimiao.shoppro.Util.howManyItems
 import com.github.xbaimiao.shoppro.core.shop.Shop
 import me.clip.placeholderapi.PlaceholderAPI
 import org.bukkit.entity.Player
@@ -36,19 +38,23 @@ abstract class ShopItem : Item {
         } else {
             ShopPro.database.getServerAlreadyData(this).sell
         }
-        val priceAll = "正在开发"
         val item = buildItem().modifyLore {
             val newLore = ArrayList<String>()
             for (line in this) {
-                val newLine = line.replace("\${name}", name)
+                var newLine = line.replace("\${name}", name)
                     .replace("\${price}", price.toString())
                     .replace("\${money}", vault.getMoney(player).toString())
                     .replace("\${price64}", (price * 64).toString())
                     .replace("\${limit}", limitPlayer.toString())
-                    .replace("\${priceAll}", priceAll.toString())
                     .replace("\${allLimit}", limitServer.toString())
                     .replace("\${limit-player}", playerLimit.toString())
                     .replace("\${limit-server}", (limitServer - serverLimit).toString())
+                if (shop.getType() == Shop.ShopType.SELL) {
+                    val priceAll = (player.inventory.howManyItems {
+                        this@ShopItem.equal(it)
+                    } * price).format()
+                    newLine = newLine.replace("\${priceAll}", priceAll.toString())
+                }
                 newLore.add(PlaceholderAPI.setPlaceholders(player, newLine))
             }
             this.clear()
