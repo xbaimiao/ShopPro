@@ -61,7 +61,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                                 section.getBoolean("$key.vanilla", true),
                                 section.getStringList("$key.commands"),
                                 this,
-                                section.getString("item")!!.parseToMaterial()
+                                section.getString("$key.item")!!.parseToMaterial()
                             )
                         )
                     } else {
@@ -94,7 +94,8 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                     )
                 }
             } catch (e: Throwable) {
-                info("在加载Shop: ${getName()} 时,物品: $key 加载出现异常,跳过加载")
+                info("在加载Shop: ${getName()} 时,物品: $key 加载出现异常,跳过加载,错误信息如下")
+                e.printStackTrace()
             }
         }
     }
