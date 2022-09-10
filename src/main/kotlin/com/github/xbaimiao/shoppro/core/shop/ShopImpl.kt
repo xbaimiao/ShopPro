@@ -1,11 +1,12 @@
 package com.github.xbaimiao.shoppro.core.shop
 
 import com.github.xbaimiao.shoppro.ShopPro
-import com.github.xbaimiao.shoppro.Util.howManyItems
 import com.github.xbaimiao.shoppro.api.ShopProBuyEvent
 import com.github.xbaimiao.shoppro.api.ShopProSellEvent
 import com.github.xbaimiao.shoppro.core.database.LimitData
 import com.github.xbaimiao.shoppro.core.item.*
+import com.github.xbaimiao.shoppro.util.Util.howManyItems
+import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.Bukkit
 import org.bukkit.configuration.Configuration
 import org.bukkit.entity.Player
@@ -77,8 +78,8 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         }
     }
 
-    override fun getTitle(): String {
-        return configuration.getString("title")!!.colored()
+    override fun getTitle(player: Player): String {
+        return configuration.getString("title")!!.colored().replacePapi(player)
     }
 
     override fun getType(): ShopType {
@@ -90,7 +91,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     }
 
     override fun open(player: Player) {
-        player.openMenu<Basic>(getTitle()) {
+        player.openMenu<Basic>(getTitle(player)) {
             rows(slots.size)
             slots = ArrayList<List<Char>>().also { it.addAll(this@ShopImpl.slots) }
             onClick {

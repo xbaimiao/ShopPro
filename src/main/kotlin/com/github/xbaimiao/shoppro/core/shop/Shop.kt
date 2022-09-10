@@ -15,7 +15,7 @@ abstract class Shop {
 
     }
 
-    abstract fun getTitle(): String
+    abstract fun getTitle(player: Player): String
 
     abstract fun getType(): ShopType
 

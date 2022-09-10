@@ -1,7 +1,7 @@
 package com.github.xbaimiao.shoppro.core.item
 
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import me.clip.placeholderapi.PlaceholderAPI
+import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -28,7 +28,7 @@ open class ItemImpl(
         val item = buildItem().modifyLore {
             val newLore = ArrayList<String>()
             for (line in this) {
-                newLore.add(PlaceholderAPI.setPlaceholders(player, line))
+                newLore.add(line.replacePapi(player))
             }
             this.clear()
             this.addAll(newLore)

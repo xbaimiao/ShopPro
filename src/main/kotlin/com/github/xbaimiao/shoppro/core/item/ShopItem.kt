@@ -1,10 +1,10 @@
 package com.github.xbaimiao.shoppro.core.item
 
 import com.github.xbaimiao.shoppro.ShopPro
-import com.github.xbaimiao.shoppro.Util.format
-import com.github.xbaimiao.shoppro.Util.howManyItems
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import me.clip.placeholderapi.PlaceholderAPI
+import com.github.xbaimiao.shoppro.util.Util.format
+import com.github.xbaimiao.shoppro.util.Util.howManyItems
+import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.modifyLore
@@ -55,7 +55,7 @@ abstract class ShopItem : Item {
                     } * price).format()
                     newLine = newLine.replace("\${priceAll}", priceAll.toString())
                 }
-                newLore.add(PlaceholderAPI.setPlaceholders(player, newLine))
+                newLore.add(newLine.replacePapi(player))
             }
             this.clear()
             this.addAll(newLore)

@@ -1,6 +1,6 @@
 package com.github.xbaimiao.shoppro.core.vault
 
-import com.github.xbaimiao.shoppro.Util.format
+import com.github.xbaimiao.shoppro.util.Util.format
 import org.bukkit.entity.Player
 import taboolib.platform.compat.VaultService
 
