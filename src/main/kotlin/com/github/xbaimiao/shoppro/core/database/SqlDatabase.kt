@@ -7,7 +7,7 @@ import taboolib.module.database.Host
 import taboolib.module.database.Table
 import javax.sql.DataSource
 
-abstract class ADatabase : Database {
+abstract class SqlDatabase : Database {
 
     abstract val host: Host<*>
     abstract val playerTable: Table<*, *>

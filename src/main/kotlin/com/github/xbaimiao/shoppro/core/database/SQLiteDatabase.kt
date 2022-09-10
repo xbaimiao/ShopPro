@@ -9,7 +9,7 @@ import taboolib.module.database.getHost
 import taboolib.platform.BukkitPlugin
 import java.util.*
 
-class SQLiteDatabase : ADatabase() {
+class SQLiteDatabase : SqlDatabase() {
 
     override val host = newFile(BukkitPlugin.getInstance().dataFolder, "sqlite.db").getHost()
     override val playerTable = Table(playerTableName, host) {

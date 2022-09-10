@@ -8,7 +8,7 @@ import taboolib.module.database.Table
 import taboolib.module.database.getHost
 import java.util.*
 
-class MysqlDatabase(configuration: Configuration) : ADatabase() {
+class MysqlDatabase(configuration: Configuration) : SqlDatabase() {
 
     override val host = configuration.getHost("mysql")
 
