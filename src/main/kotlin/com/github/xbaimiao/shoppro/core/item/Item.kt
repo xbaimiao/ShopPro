@@ -29,8 +29,8 @@ interface Item {
     fun update(player: Player): ItemStack
 
     fun exeCommands(player: Player, amount: Int) {
-        for (a in 1..amount){
-            commands.map { it.replace("%player%", player.name) }.forEach { command ->
+        commands.map { it.replace("%player%", player.name).replace("\${amount}", amount.toString()) }
+            .forEach { command ->
                 if (command.startsWith("[tell] ")) {
                     player.sendMessage(command.substring(7).colored())
                 } else if (command.startsWith("[console] ")) {
@@ -50,7 +50,6 @@ interface Item {
                     player.closeInventory()
                 }
             }
-        }
     }
 
 }

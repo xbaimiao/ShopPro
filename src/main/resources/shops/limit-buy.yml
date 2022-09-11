@@ -67,4 +67,4 @@ items:
     # 关闭此选项 可只执行命令 不给原版物品
     vanilla: false
     commands:
-      - '[console] ia give %player% 物品'
+      - '[console] ia give %player% 物品 ${amount}'
