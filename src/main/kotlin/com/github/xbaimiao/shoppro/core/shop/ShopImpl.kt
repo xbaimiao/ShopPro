@@ -162,7 +162,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                     }
                 } else {
                     onClick(item.key) {
-                        item.exeCommands(player)
+                        item.exeCommands(player, 1)
                     }
                 }
             }
@@ -188,7 +188,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
             }
             Bukkit.getPluginManager().callEvent(ShopProBuyEvent(item, amount, player))
             ShopPro.database.addAmount(item, player, LimitData(amount.toLong(), 0L))
-            item.exeCommands(player)
+            item.exeCommands(player, amount)
             player.sendLang("buy-item", amount, item.name, item.price * amount)
         } else {
             player.sendLang("not-money")

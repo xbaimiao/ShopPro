@@ -28,25 +28,27 @@ interface Item {
     fun buildItem(): ItemStack
     fun update(player: Player): ItemStack
 
-    fun exeCommands(player: Player) {
-        commands.map { it.replace("%player%", player.name) }.forEach { command ->
-            if (command.startsWith("[tell] ")) {
-                player.sendMessage(command.substring(7).colored())
-            } else if (command.startsWith("[console] ")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.substring(10))
-            } else if (command.startsWith("[player] ")) {
-                Bukkit.dispatchCommand(player, command.substring(9))
-            } else if (command.startsWith("[open] ")) {
-                val shop = ShopManager.shops.firstOrNull { it.getName() == command.substring(7) }
-                shop?.open(player)
-            } else if (command.startsWith("[op] ")) {
-                Bukkit.dispatchCommand(object : Player by player {
-                    override fun isOp() = true
-                    override fun hasPermission(p0: Permission) = true
-                    override fun hasPermission(p0: String) = true
-                }, command.substring(5))
-            } else if (command == "close" || command.startsWith("[close]")) {
-                player.closeInventory()
+    fun exeCommands(player: Player, amount: Int) {
+        for (a in 1..amount){
+            commands.map { it.replace("%player%", player.name) }.forEach { command ->
+                if (command.startsWith("[tell] ")) {
+                    player.sendMessage(command.substring(7).colored())
+                } else if (command.startsWith("[console] ")) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.substring(10))
+                } else if (command.startsWith("[player] ")) {
+                    Bukkit.dispatchCommand(player, command.substring(9))
+                } else if (command.startsWith("[open] ")) {
+                    val shop = ShopManager.shops.firstOrNull { it.getName() == command.substring(7) }
+                    shop?.open(player)
+                } else if (command.startsWith("[op] ")) {
+                    Bukkit.dispatchCommand(object : Player by player {
+                        override fun isOp() = true
+                        override fun hasPermission(p0: Permission) = true
+                        override fun hasPermission(p0: String) = true
+                    }, command.substring(5))
+                } else if (command == "close" || command.startsWith("[close]")) {
+                    player.closeInventory()
+                }
             }
         }
     }
