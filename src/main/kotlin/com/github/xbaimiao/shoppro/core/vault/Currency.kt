@@ -1,6 +1,7 @@
 package com.github.xbaimiao.shoppro.core.vault
 
 import org.bukkit.entity.Player
+import java.util.*
 
 interface Currency {
 
@@ -20,7 +21,7 @@ enum class CurrencyType(val string: String, val func: (name: String) -> Currency
     POINTS("points", {
         PointsImpl()
     }),
-    DIY("diy", {
+    DIY(UUID.randomUUID().toString(), {
         DiyCurrency.formString(it)
     });
 
