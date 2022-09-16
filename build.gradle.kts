@@ -25,6 +25,8 @@ taboolib {
     install("expansion-command-helper")
     classifier = null
     version = "6.0.9-84"
+    options("skit-kotlin")
+    relocate("kotlin","libs.kotlin1510")
 }
 
 repositories {
@@ -36,9 +38,10 @@ dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("public:papi:1.0.0")
     compileOnly("public:vault:1.0.0")
+    compileOnly("public:points:1.0.0")
     compileOnly("ink.ptms.core:v11902:11902-minimize:mapped")
     compileOnly("ink.ptms.core:v11902:11902-minimize:universal")
-    compileOnly(kotlin("stdlib"))
+    taboo(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }
 

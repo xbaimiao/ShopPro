@@ -2,6 +2,8 @@ package com.github.xbaimiao.shoppro.core.item
 
 import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.core.shop.Shop
+import com.github.xbaimiao.shoppro.core.vault.Currency
+import com.github.xbaimiao.shoppro.core.vault.VaultImpl
 import com.github.xbaimiao.shoppro.util.Util.format
 import com.github.xbaimiao.shoppro.util.Util.howManyItems
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
@@ -18,6 +20,8 @@ abstract class ShopItem : Item {
     override fun isCommodity(): Boolean {
         return true
     }
+
+    var currency: Currency = VaultImpl
 
     abstract fun vanillaItem(): ItemStack
 
@@ -43,7 +47,7 @@ abstract class ShopItem : Item {
             for (line in this) {
                 var newLine = line.replace("\${name}", name)
                     .replace("\${price}", price.toString())
-                    .replace("\${money}", vault.getMoney(player).toString())
+                    .replace("\${money}", currency.getMoney(player).toString())
                     .replace("\${price64}", (price * 64).toString())
                     .replace("\${limit}", limitPlayer.toString())
                     .replace("\${allLimit}", limitServer.toString())

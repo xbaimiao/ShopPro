@@ -1,9 +1,16 @@
-package com.github.xbaimiao.shoppro.core.item
+package com.github.xbaimiao.shoppro.core.item.impl
 
+import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.ItemLoader
+import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.shop.Shop
+import com.github.xbaimiao.shoppro.core.vault.CurrencyType
 import org.bukkit.Material
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.library.xseries.parseToMaterial
+import taboolib.module.chat.colored
 import taboolib.platform.util.ItemBuilder
 import java.util.*
 
@@ -45,6 +52,32 @@ class HeadShopItem(
             this.lore.addAll(this@HeadShopItem.lore)
             skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
         }
+    }
+
+    companion object : ItemLoader {
+
+        override var prefix: String? = "HEAD"
+
+        override fun formSection(char: Char, section: ConfigurationSection, shop: Shop): Item {
+            return HeadShopItem(
+                char,
+                section.getString("material")!!,
+                section.getDouble("price"),
+                section.getLong("limit"),
+                section.getLong("limit-player"),
+                section.getString("name")!!.colored(),
+                section.getStringList("lore").colored(),
+                section.getBoolean("vanilla", true),
+                section.getStringList("commands"),
+                shop,
+                section.getString("item")!!.parseToMaterial()
+            ).also {
+                section.getString("currency")?.let { currency ->
+                    it.currency = CurrencyType.formString(currency).func.invoke(currency)
+                }
+            }
+        }
+
     }
 
 }

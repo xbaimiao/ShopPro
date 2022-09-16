@@ -4,7 +4,7 @@ import com.github.xbaimiao.shoppro.util.Util.format
 import org.bukkit.entity.Player
 import taboolib.platform.compat.VaultService
 
-object VaultImpl : Vault {
+object VaultImpl : Currency {
 
     override fun hasMoney(player: Player, double: Double): Boolean {
         return getMoney(player) >= double.format()

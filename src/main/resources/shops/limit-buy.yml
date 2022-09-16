@@ -20,6 +20,10 @@ items:
   # 普通物品收购示例
   A:
     material: STONE
+    # 指定货币 如果不指定默认Vault
+    # 已预设点券支持 为: "points"
+    # 您可在 currencys 里自定义货币
+    currency: points
     name: '石头'
     # 每日限购买
     limit: 5000

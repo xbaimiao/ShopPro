@@ -2,14 +2,19 @@ package com.github.xbaimiao.shoppro.core.item
 
 import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
-import com.github.xbaimiao.shoppro.core.vault.Vault
-import com.github.xbaimiao.shoppro.core.vault.VaultImpl
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import taboolib.module.chat.colored
+
+interface ItemLoader {
+    val prefix: String?
+    fun formSection(char: Char, section: ConfigurationSection, shop: Shop): Item
+
+}
 
 interface Item {
 
@@ -20,9 +25,6 @@ interface Item {
     val vanilla: Boolean
     val commands: List<String>
     val shop: Shop
-
-    val vault: Vault
-        get() = VaultImpl
 
     fun isCommodity(): Boolean
     fun buildItem(): ItemStack

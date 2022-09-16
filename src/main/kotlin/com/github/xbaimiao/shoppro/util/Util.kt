@@ -11,7 +11,7 @@ import java.text.DecimalFormat
 
 object Util {
 
-    private val hasPapi by lazy { Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null }.also {
+    val hasPapi by lazy { Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null }.also {
         info("PlaceholderAPI Hook")
     }
 

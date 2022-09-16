@@ -1,7 +1,7 @@
 package com.github.xbaimiao.shoppro.core.database
 
 import com.github.xbaimiao.shoppro.core.item.Item
-import com.github.xbaimiao.shoppro.core.item.ItemsAdderShopItem
+import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
 import org.bukkit.entity.Player
 import taboolib.module.database.Host
 import taboolib.module.database.Table
@@ -27,10 +27,10 @@ abstract class SqlDatabase : Database {
 
     override fun reset() {
         serverTable.workspace(dataSource) {
-            executeUpdate("DELETE FROM '$serverTableName';").run()
+            executeUpdate("DELETE FROM $serverTableName;").run()
         }.run()
         playerTable.workspace(dataSource) {
-            executeUpdate("DELETE FROM '$playerTableName';").run()
+            executeUpdate("DELETE FROM $playerTableName;").run()
         }.run()
     }
 

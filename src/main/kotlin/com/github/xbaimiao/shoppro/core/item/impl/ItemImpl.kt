@@ -1,11 +1,15 @@
-package com.github.xbaimiao.shoppro.core.item
+package com.github.xbaimiao.shoppro.core.item.impl
 
+import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.ItemLoader
 import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.Material
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.module.chat.colored
 import taboolib.platform.util.ItemBuilder
 import taboolib.platform.util.modifyLore
 import java.util.*
@@ -60,6 +64,23 @@ class ItemImpl(
             this.addAll(newLore)
         }
         return item
+    }
+
+    companion object : ItemLoader {
+
+        override var prefix: String? = null
+
+        override fun formSection(char: Char, section: ConfigurationSection, shop: Shop): Item {
+            return ItemImpl(
+                section.getString("material")!!,
+                section.getStringList("lore").colored(),
+                section.getString("name")!!.colored(),
+                char,
+                section.getBoolean("vanilla", true),
+                section.getStringList("commands"),
+                shop
+            )
+        }
     }
 
 }
