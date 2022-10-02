@@ -4,10 +4,6 @@ import com.github.xbaimiao.shoppro.core.database.Database
 import com.github.xbaimiao.shoppro.core.database.MysqlDatabase
 import com.github.xbaimiao.shoppro.core.database.SQLiteDatabase
 import com.github.xbaimiao.shoppro.core.item.*
-import com.github.xbaimiao.shoppro.core.item.impl.HeadShopItem
-import com.github.xbaimiao.shoppro.core.item.impl.ItemImpl
-import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
-import com.github.xbaimiao.shoppro.core.item.impl.VanillaShopItem
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import com.github.xbaimiao.shoppro.core.vault.DiyCurrency
 import taboolib.common.platform.Plugin
@@ -22,16 +18,12 @@ object ShopPro : Plugin() {
 
     lateinit var database: Database
 
-    val itemLoader = ArrayList<ItemLoader>()
+    val itemLoaderManager = ItemLoaderManager()
 
     override fun onEnable() {
         ShopManager.load()
         DiyCurrency.load()
         database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
-        itemLoader.add(VanillaShopItem)
-        itemLoader.add(ItemImpl)
-        itemLoader.add(ItemsAdderShopItem)
-        itemLoader.add(HeadShopItem)
     }
 
     fun reload() {

@@ -5,9 +5,7 @@ import com.github.xbaimiao.shoppro.api.ShopProBuyEvent
 import com.github.xbaimiao.shoppro.api.ShopProSellEvent
 import com.github.xbaimiao.shoppro.core.database.LimitData
 import com.github.xbaimiao.shoppro.core.item.Item
-import com.github.xbaimiao.shoppro.core.item.impl.ItemImpl
 import com.github.xbaimiao.shoppro.core.item.ShopItem
-import com.github.xbaimiao.shoppro.core.item.impl.VanillaShopItem
 import com.github.xbaimiao.shoppro.util.Util.howManyItems
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
 import org.bukkit.Bukkit
@@ -36,7 +34,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 val subSection = section.getConfigurationSection(key)!!
                 if (section.getBoolean("$key.is-commodity", true)) {
                     val materialString = section.getString("$key.material")!!
-                    for (loader in ShopPro.itemLoader) {
+                    for (loader in ShopPro.itemLoaderManager.itemLoaders) {
                         if (loader.prefix != null) {
                             if (materialString.startsWith(loader.prefix!!)) {
                                 items.add(loader.formSection(key[0], subSection, this))
@@ -44,9 +42,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             }
                         }
                     }
-                    items.add(VanillaShopItem.formSection(key[0], subSection, this))
+                    items.add(ShopPro.itemLoaderManager.getVanillaShop().formSection(key[0], subSection, this))
                 } else {
-                    items.add(ItemImpl.formSection(key[0], subSection, this))
+                    items.add(ShopPro.itemLoaderManager.getItemImpl().formSection(key[0], subSection, this))
                 }
             } catch (e: Throwable) {
                 info("在加载Shop: ${getName()} 时,物品: $key 加载出现异常,跳过加载,错误信息如下")
