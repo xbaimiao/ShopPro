@@ -27,9 +27,13 @@ object Commands {
             }
             execute<Player> { sender, _, argument ->
                 val shop = ShopManager.shops.first { it.getName() == argument }
+                if (!sender.hasPermission("shoppro.command.open.${shop.getName()}")){
+                    sender.sendLang("shop-not-permission")
+                    return@execute
+                }
                 shop.open(sender)
             }
-            dynamic("玩家", permission = "admin") {
+            dynamic("玩家", permission = "shoppro.command.open.admin") {
                 suggestion<CommandSender> { _, _ ->
                     onlinePlayers.map { it.name }
                 }
@@ -44,7 +48,7 @@ object Commands {
 
     @CommandBody
     val sellAll = subCommand {
-        dynamic("name") {
+        dynamic("name", permission = "shoppro.command.sellall") {
             suggestion<CommandSender> { _, _ ->
                 ShopManager.shops.map { it.getName() }
             }
@@ -52,7 +56,7 @@ object Commands {
                 val shop = ShopManager.shops.first { it.getName() == argument }
                 sellAll(sender, shop)
             }
-            dynamic("玩家", permission = "admin") {
+            dynamic("玩家", permission = "shoppro.command.sellall.admin") {
                 suggestion<CommandSender> { _, _ ->
                     onlinePlayers.map { it.name }
                 }
@@ -73,7 +77,7 @@ object Commands {
         shop.sellAll(player)
     }
 
-    @CommandBody(permission = "admin")
+    @CommandBody(permission = "shoppro.resetlimit")
     val resetLimit = subCommand {
         execute<CommandSender> { sender, _, _ ->
             ShopPro.database.reset()
@@ -81,7 +85,7 @@ object Commands {
         }
     }
 
-    @CommandBody(permission = "admin")
+    @CommandBody(permission = "shoppro.reload")
     val reload = subCommand {
         execute<CommandSender> { sender, _, _ ->
             ShopPro.reload()

@@ -73,7 +73,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
             val amount = player.inventory.howManyItems {
                 shopItem.equal(it)
             }
-            if (amount >= 0) {
+            if (amount > 0) {
                 sell(amount, shopItem, player)
             }
         }
