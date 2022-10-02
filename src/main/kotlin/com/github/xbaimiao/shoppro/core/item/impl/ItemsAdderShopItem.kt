@@ -36,7 +36,10 @@ class ItemsAdderShopItem(
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
-        return itemStack.type == material && itemStack.itemMeta?.customModelData == custom
+        if (itemStack.hasItemMeta() && itemStack.itemMeta!!.hasCustomModelData()) {
+            return itemStack.type == material && itemStack.itemMeta?.customModelData == custom
+        }
+        return false
     }
 
     override fun vanillaItem(): ItemStack {
