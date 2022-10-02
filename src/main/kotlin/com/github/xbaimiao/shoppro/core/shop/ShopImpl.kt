@@ -65,6 +65,20 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         return configuration.getString("name")!!.colored()
     }
 
+    override fun sellAll(player: Player) {
+        if (getType() != ShopType.SELL) {
+            throw RuntimeException("此商店非出售商店")
+        }
+        items.filterIsInstance<ShopItem>().forEach { shopItem ->
+            val amount = player.inventory.howManyItems {
+                shopItem.equal(it)
+            }
+            if (amount >= 0) {
+                sell(amount, shopItem, player)
+            }
+        }
+    }
+
     override fun open(player: Player) {
         player.openMenu<Basic>(getTitle(player)) {
             rows(slots.size)

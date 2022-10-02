@@ -21,6 +21,9 @@ abstract class Shop {
 
     abstract fun getName(): String
 
+    abstract fun sellAll(player: Player)
+
     abstract fun open(player: Player)
+
 
 }

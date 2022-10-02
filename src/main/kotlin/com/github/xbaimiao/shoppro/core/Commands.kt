@@ -1,6 +1,7 @@
 package com.github.xbaimiao.shoppro.core
 
 import com.github.xbaimiao.shoppro.ShopPro
+import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -39,6 +40,37 @@ object Commands {
                 }
             }
         }
+    }
+
+    @CommandBody
+    val sellAll = subCommand {
+        dynamic("name") {
+            suggestion<CommandSender> { _, _ ->
+                ShopManager.shops.map { it.getName() }
+            }
+            execute<Player> { sender, _, argument ->
+                val shop = ShopManager.shops.first { it.getName() == argument }
+                sellAll(sender, shop)
+            }
+            dynamic("玩家", permission = "admin") {
+                suggestion<CommandSender> { _, _ ->
+                    onlinePlayers.map { it.name }
+                }
+                execute<CommandSender> { _, context, argument ->
+                    val player = Bukkit.getPlayerExact(argument)!!
+                    val shop = ShopManager.shops.first { it.getName() == context.argument(-1) }
+                    sellAll(player, shop)
+                }
+            }
+        }
+    }
+
+    private fun sellAll(player: Player, shop: Shop) {
+        if (shop.getType() != Shop.ShopType.SELL) {
+            player.sendLang("sell-all-error")
+            return
+        }
+        shop.sellAll(player)
     }
 
     @CommandBody(permission = "admin")
