@@ -74,7 +74,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 shopItem.equal(it)
             }
             if (amount > 0) {
-                sell(amount, shopItem, player)
+                checkSellLimit(amount, shopItem, player)
             }
         }
     }
@@ -99,7 +99,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                                 org.bukkit.event.inventory.ClickType.RIGHT -> 64
                                 else -> return@onClick
                             }
-                            buy(amount, item, player)
+                            checkBuyLimit(amount, item, player)
                             event.currentItem?.let {
                                 event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
                             }
@@ -121,7 +121,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
 
                                 else -> return@onClick
                             }
-                            sell(amount, item, player)
+                            checkSellLimit(amount, item, player)
                             event.currentItem?.let {
                                 event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
                             }
@@ -136,17 +136,29 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         }
     }
 
-    private fun buy(amount: Int, item: ShopItem, player: Player) {
+    private fun checkBuyLimit(amount: Int, item: ShopItem, player: Player) {
         if (item.isLimit()) {
-            if (ShopPro.database.getPlayerAlreadyData(player, item).buy + amount > item.limitPlayer) {
+            if (ShopPro.database.getPlayerAlreadyData(player, item).buy >= item.limitPlayer) {
                 player.sendLang("buy-limit-player", item.limitPlayer)
                 return
             }
+            if (ShopPro.database.getServerAlreadyData(item).buy >= item.limitServer) {
+                player.sendLang("buy-limit-server", item.limitServer)
+                return
+            }
+            if (ShopPro.database.getPlayerAlreadyData(player, item).buy + amount > item.limitPlayer) {
+                buy((item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).buy).toInt(), item, player)
+                return
+            }
             if (ShopPro.database.getServerAlreadyData(item).buy + amount > item.limitServer) {
-                player.sendLang("buy-limit-player", item.limitServer)
+                buy((item.limitServer - ShopPro.database.getServerAlreadyData(item).buy).toInt(), item, player)
                 return
             }
         }
+        buy(amount, item, player)
+    }
+
+    private fun buy(amount: Int, item: ShopItem, player: Player) {
         if (item.currency.takeMoney(player, item.price * amount)) {
             if (item.vanilla) {
                 val vanilla = item.vanillaItem()
@@ -162,17 +174,29 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         }
     }
 
-    private fun sell(amount: Int, item: ShopItem, player: Player) {
+    private fun checkSellLimit(amount: Int, item: ShopItem, player: Player) {
         if (item.isLimit()) {
-            if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.limitPlayer) {
+            if (ShopPro.database.getPlayerAlreadyData(player, item).sell >= item.limitPlayer) {
                 player.sendLang("sell-limit-player", item.limitPlayer)
                 return
             }
-            if (ShopPro.database.getServerAlreadyData(item).sell + amount > item.limitServer) {
+            if (ShopPro.database.getServerAlreadyData(item).sell >= item.limitServer) {
                 player.sendLang("sell-limit-server", item.limitServer)
                 return
             }
+            if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.limitPlayer) {
+                sell((item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).sell).toInt(), item, player)
+                return
+            }
+            if (ShopPro.database.getServerAlreadyData(item).sell + amount > item.limitServer) {
+                sell((item.limitServer - ShopPro.database.getServerAlreadyData(item).sell).toInt(), item, player)
+                return
+            }
         }
+        sell(amount, item, player)
+    }
+
+    private fun sell(amount: Int, item: ShopItem, player: Player) {
         if (player.inventory.hasItem(amount) { item.equal(it) }) {
             player.inventory.takeItem(amount) { item.equal(it) }
             item.currency.giveMoney(player, item.price * amount)
