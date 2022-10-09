@@ -51,7 +51,7 @@ abstract class ShopItem : Item {
                     .replace("\${price64}", (price * 64).toString())
                     .replace("\${limit}", limitPlayer.toString())
                     .replace("\${allLimit}", limitServer.toString())
-                    .replace("\${limit-player}", playerLimit.toString())
+                    .replace("\${limit-player}", (limitPlayer - playerLimit).toString())
                     .replace("\${limit-server}", (limitServer - serverLimit).toString())
                 if (shop.getType() == Shop.ShopType.SELL) {
                     val priceAll = (player.inventory.howManyItems {
