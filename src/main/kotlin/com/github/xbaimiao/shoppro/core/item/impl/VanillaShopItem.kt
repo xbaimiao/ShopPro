@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.parseToMaterial
 import taboolib.module.chat.colored
+import taboolib.platform.util.hasLore
 
 class VanillaShopItem(
     override val key: Char,
@@ -29,7 +30,7 @@ class VanillaShopItem(
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
-        return itemStack.itemMeta?.hasLore() == false && itemStack.type == material
+        return itemStack.type == material && !itemStack.hasLore()
     }
 
     override fun buildItem(): ItemStack {
