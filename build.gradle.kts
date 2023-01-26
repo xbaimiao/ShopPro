@@ -1,8 +1,8 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("io.izzel.taboolib") version "1.42"
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    id("io.izzel.taboolib") version "1.54"
+    id("org.jetbrains.kotlin.jvm") version "1.8.0"
 }
 
 taboolib {
@@ -24,9 +24,9 @@ taboolib {
     install("platform-bukkit")
     install("expansion-command-helper")
     classifier = null
-    version = "6.0.9-84"
+    version = "6.0.10-59"
     options("skit-kotlin")
-    relocate("kotlin","libs.kotlin1510")
+    relocate("kotlin","libs.kotlin180")
 }
 
 repositories {

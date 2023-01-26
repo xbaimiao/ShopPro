@@ -20,6 +20,7 @@ import taboolib.platform.util.giveItem
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.sendLang
 import taboolib.platform.util.takeItem
+import java.util.concurrent.CopyOnWriteArrayList
 
 class ShopImpl(private val configuration: Configuration) : Shop() {
 
@@ -82,7 +83,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     override fun open(player: Player) {
         player.openMenu<Basic>(getTitle(player)) {
             rows(slots.size)
-            slots = ArrayList<List<Char>>().also { it.addAll(this@ShopImpl.slots) }
+            slots = CopyOnWriteArrayList<List<Char>>().also { it.addAll(this@ShopImpl.slots) }
             onClick {
                 it.isCancelled = true
             }
@@ -185,7 +186,11 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 return
             }
             if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.limitPlayer) {
-                sell((item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).sell).toInt(), item, player)
+                sell(
+                    (item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).sell).toInt(),
+                    item,
+                    player
+                )
                 return
             }
             if (ShopPro.database.getServerAlreadyData(item).sell + amount > item.limitServer) {

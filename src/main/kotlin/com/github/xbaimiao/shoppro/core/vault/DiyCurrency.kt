@@ -62,7 +62,7 @@ class DiyCurrency(configuration: Configuration) : Currency {
         }
         val cmd = replace(takeCommand, player, double.format())
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd)
-        return false
+        return true
     }
 
     override fun getMoney(player: Player): Double {
