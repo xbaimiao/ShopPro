@@ -3,7 +3,7 @@ package com.github.xbaimiao.shoppro
 import com.github.xbaimiao.shoppro.core.database.Database
 import com.github.xbaimiao.shoppro.core.database.MysqlDatabase
 import com.github.xbaimiao.shoppro.core.database.SQLiteDatabase
-import com.github.xbaimiao.shoppro.core.item.*
+import com.github.xbaimiao.shoppro.core.item.ItemLoaderManager
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import com.github.xbaimiao.shoppro.core.vault.DiyCurrency
 import taboolib.common.platform.Plugin
@@ -20,7 +20,7 @@ object ShopPro : Plugin() {
 
     val itemLoaderManager = ItemLoaderManager()
 
-    override fun onEnable() {
+    override fun onActive() {
         ShopManager.load()
         DiyCurrency.load()
         database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
