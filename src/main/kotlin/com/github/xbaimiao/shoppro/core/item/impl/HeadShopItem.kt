@@ -4,29 +4,19 @@ import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.ItemLoader
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import com.github.xbaimiao.shoppro.core.vault.CurrencyType
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
 import taboolib.library.xseries.parseToMaterial
-import taboolib.module.chat.colored
 import taboolib.platform.util.ItemBuilder
 import java.util.*
 
 class HeadShopItem(
-    override val key: Char,
     headString: String,
-    override val price: Double,
-    override val limitServer: Long,
-    override val limitPlayer: Long,
-    override val name: String,
-    override val lore: List<String>,
-    override val vanilla: Boolean,
-    override val commands: List<String>,
-    override val shop: Shop,
+    itemSetting: ItemSetting,
     val item: Material
-) : ShopItem() {
+) : ShopItem(itemSetting) {
 
     override val material: Material = XMaterial.PLAYER_HEAD.parseMaterial()!!
 
@@ -54,28 +44,20 @@ class HeadShopItem(
         }
     }
 
-    companion object : ItemLoader {
+    companion object : ItemLoader() {
 
         override var prefix: String? = "HEAD"
 
         override fun formSection(char: Char, section: ConfigurationSection, shop: Shop): Item {
             return HeadShopItem(
-                char,
                 section.getString("material")!!,
-                section.getDouble("price"),
-                section.getLong("limit"),
-                section.getLong("limit-player"),
-                section.getString("name")!!.colored(),
-                section.getStringList("lore").colored(),
-                section.getBoolean("vanilla", true),
-                section.getStringList("commands"),
-                shop,
+                section.toItemSetting(char, shop),
                 section.getString("item")!!.parseToMaterial()
-            ).also {
-                section.getString("currency")?.let { currency ->
-                    it.currency = CurrencyType.formString(currency).func.invoke(currency)
-                }
-            }
+            )
+        }
+
+        override fun parseToMaterial(section: ConfigurationSection): Material {
+            return section.getString("item")!!.parseToMaterial()
         }
 
     }

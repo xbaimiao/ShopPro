@@ -21,6 +21,7 @@ taboolib {
     install("module-ui")
     install("module-nms-util")
     install("module-nms")
+    install("module-kether")
     install("platform-bukkit")
     install("expansion-command-helper")
     classifier = null
@@ -31,7 +32,7 @@ taboolib {
 
 repositories {
     mavenCentral()
-    maven("https://repo.xbaimiao.com/nexus/content/repositories/releases/")
+    maven("https://maven.xbaimiao.com/repository/maven-public/")
 }
 
 dependencies {
@@ -41,6 +42,7 @@ dependencies {
     compileOnly("public:points:1.0.0")
     compileOnly("ink.ptms.core:v11902:11902-minimize:mapped")
     compileOnly("ink.ptms.core:v11902:11902-minimize:universal")
+    compileOnly("public:Zaphkiel:1.0.0")
     taboo(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }

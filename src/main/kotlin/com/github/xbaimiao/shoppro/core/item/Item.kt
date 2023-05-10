@@ -10,11 +10,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import taboolib.module.chat.colored
 
-interface ItemLoader {
-    val prefix: String?
-    fun formSection(char: Char, section: ConfigurationSection, shop: Shop): Item
-
-}
 
 interface Item {
 

@@ -25,5 +25,4 @@ abstract class Shop {
 
     abstract fun open(player: Player)
 
-
 }

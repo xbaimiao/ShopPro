@@ -5,6 +5,7 @@ import com.github.xbaimiao.shoppro.api.ShopProBuyEvent
 import com.github.xbaimiao.shoppro.api.ShopProSellEvent
 import com.github.xbaimiao.shoppro.core.database.LimitData
 import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.KetherCondition
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.util.Util.howManyItems
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
@@ -88,7 +89,16 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 it.isCancelled = true
             }
             for (item in this@ShopImpl.items) {
+                var canBuyOrSell = true
+                if (item is KetherCondition && !item.check(player)) {
+                    canBuyOrSell = false
+                }
+                if (!canBuyOrSell && item is KetherCondition) {
+                    set(item.key, item.conditionItem(player))
+                    continue
+                }
                 set(item.key, item.update(player))
+                // buy and sell
                 if (item is ShopItem) {
                     if (getType() == ShopType.BUY) {
                         onClick(item.key) { event ->

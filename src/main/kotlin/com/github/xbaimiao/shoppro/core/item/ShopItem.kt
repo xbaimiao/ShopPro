@@ -3,25 +3,71 @@ package com.github.xbaimiao.shoppro.core.item
 import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.core.vault.Currency
-import com.github.xbaimiao.shoppro.core.vault.VaultImpl
 import com.github.xbaimiao.shoppro.util.Util.format
 import com.github.xbaimiao.shoppro.util.Util.howManyItems
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.modifyLore
 
-abstract class ShopItem : Item {
+abstract class ShopItem(
+    override val key: Char,
+    override val material: Material,
+    override val name: String,
+    override val lore: List<String>,
+    override val vanilla: Boolean,
+    override val commands: List<String>,
+    override val shop: Shop,
+    override val conditionScript: String?,
+    override val conditionIcon: Material?,
+    override val conditionLore: List<String>,
+    override val conditionName: String?,
+    val price: Double,
+    val limitServer: Long,
+    val limitPlayer: Long,
+    val currency: Currency
+) : Item, KetherCondition {
 
-    abstract val price: Double
-    abstract val limitServer: Long
-    abstract val limitPlayer: Long
+    constructor(itemSetting: ItemSetting) : this(
+        itemSetting.key,
+        itemSetting.material,
+        itemSetting.name,
+        itemSetting.lore,
+        itemSetting.vanilla,
+        itemSetting.commands,
+        itemSetting.shop,
+        itemSetting.script,
+        itemSetting.conditionIcon,
+        itemSetting.conditionLore,
+        itemSetting.conditionName,
+        itemSetting.price,
+        itemSetting.limitServer,
+        itemSetting.limitPlayer,
+        itemSetting.currency
+    )
+
+    class ItemSetting(
+        val key: Char,
+        val material: Material,
+        val name: String,
+        val lore: List<String>,
+        val vanilla: Boolean,
+        val commands: List<String>,
+        val shop: Shop,
+        val script: String?,
+        val conditionIcon: Material?,
+        val conditionLore: List<String>,
+        val conditionName: String?,
+        val price: Double,
+        val limitServer: Long,
+        val limitPlayer: Long,
+        var currency: Currency
+    )
 
     override fun isCommodity(): Boolean {
         return true
     }
-
-    var currency: Currency = VaultImpl
 
     abstract fun vanillaItem(): ItemStack
 

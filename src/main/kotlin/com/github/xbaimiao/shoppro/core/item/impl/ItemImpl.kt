@@ -15,8 +15,12 @@ import taboolib.platform.util.modifyLore
 import java.util.*
 
 class ItemImpl(
-    materialString: String, override val lore: List<String>, override val name: String,
-    override val key: Char, override val vanilla: Boolean, override val commands: List<String>,
+    materialString: String,
+    override val lore: List<String>,
+    override val name: String,
+    override val key: Char,
+    override val vanilla: Boolean,
+    override val commands: List<String>,
     override val shop: Shop
 ) : Item {
 
@@ -66,7 +70,7 @@ class ItemImpl(
         return item
     }
 
-    companion object : ItemLoader {
+    companion object : ItemLoader() {
 
         override var prefix: String? = null
 

@@ -27,6 +27,15 @@ items:
     limit-player: 500
     # 物品金额
     price: 1
+    # 条件
+    condition: 'permission shop.sell.stone'
+    # 条件不满足无法显示，玩家买不了，但能看到的样子
+    condition-icon: barrier
+    condition-name: '条件不满足'
+    # 未解锁状态下的lore描述
+    condition-lore:
+      - '未解锁名称描述1'
+      - '未解锁名称描述2'
     lore:
       - '&e| &7这里可以出售你背包里面的&6 ${name}'
       - '&e| &7收购单价 &6${price}'
