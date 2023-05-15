@@ -4,16 +4,14 @@ import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.ItemLoader
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import com.github.xbaimiao.shoppro.core.vault.CurrencyType
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.hasLore
 
-class VanillaShopItem(
-    itemSetting: ItemSetting
-) : ShopItem(itemSetting) {
+open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
 
-    override fun vanillaItem(): ItemStack {
+    override fun vanillaItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material)
     }
 
@@ -21,7 +19,7 @@ class VanillaShopItem(
         return itemStack.type == material && !itemStack.hasLore()
     }
 
-    override fun buildItem(): ItemStack {
+    override fun buildItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material) {
             this.name = this@VanillaShopItem.name
             this.lore.addAll(this@VanillaShopItem.lore)

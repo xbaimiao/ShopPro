@@ -47,7 +47,7 @@ class ItemImpl(
         return false
     }
 
-    override fun buildItem(): ItemStack {
+    override fun buildItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material) {
             this.name = this@ItemImpl.name
             this.lore.addAll(this@ItemImpl.lore)
@@ -59,7 +59,7 @@ class ItemImpl(
     }
 
     override fun update(player: Player): ItemStack {
-        val item = buildItem().modifyLore {
+        val item = buildItem(player).modifyLore {
             val newLore = ArrayList<String>()
             for (line in this) {
                 newLore.add(line.replacePapi(player))

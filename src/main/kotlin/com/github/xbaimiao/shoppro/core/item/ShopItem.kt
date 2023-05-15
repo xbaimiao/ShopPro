@@ -69,7 +69,10 @@ abstract class ShopItem(
         return true
     }
 
-    abstract fun vanillaItem(): ItemStack
+    /**
+     * 构建发送给玩家的物品
+     */
+    abstract fun vanillaItem(player: Player): ItemStack
 
     abstract fun equal(itemStack: ItemStack): Boolean
 
@@ -88,7 +91,7 @@ abstract class ShopItem(
         } else {
             ShopPro.database.getServerAlreadyData(this).sell
         }
-        val item = buildItem().modifyLore {
+        val item = buildItem(player).modifyLore {
             val newLore = ArrayList<String>()
             for (line in this) {
                 var newLine = line.replace("\${name}", name)

@@ -4,9 +4,9 @@ import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.ItemLoader
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import com.github.xbaimiao.shoppro.core.vault.CurrencyType
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
 
@@ -33,13 +33,13 @@ class ItemsAdderShopItem(
         return false
     }
 
-    override fun vanillaItem(): ItemStack {
+    override fun vanillaItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material) {
             this.customModelData = custom
         }
     }
 
-    override fun buildItem(): ItemStack {
+    override fun buildItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material) {
             this.name = this@ItemsAdderShopItem.name
             this.lore.addAll(this@ItemsAdderShopItem.lore)

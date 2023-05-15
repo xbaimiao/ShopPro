@@ -1,9 +1,6 @@
 package com.github.xbaimiao.shoppro.core.item
 
-import com.github.xbaimiao.shoppro.core.item.impl.HeadShopItem
-import com.github.xbaimiao.shoppro.core.item.impl.ItemImpl
-import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
-import com.github.xbaimiao.shoppro.core.item.impl.VanillaShopItem
+import com.github.xbaimiao.shoppro.core.item.impl.*
 
 class ItemLoaderManager {
 
@@ -14,6 +11,7 @@ class ItemLoaderManager {
         itemLoaders.add(ItemImpl)
         itemLoaders.add(ItemsAdderShopItem)
         itemLoaders.add(HeadShopItem)
+        itemLoaders.add(ZapItem)
     }
 
     fun getVanillaShop(): ItemLoader = VanillaShopItem.Companion

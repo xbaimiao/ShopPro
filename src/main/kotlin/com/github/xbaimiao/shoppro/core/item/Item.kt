@@ -4,7 +4,6 @@ import com.github.xbaimiao.shoppro.core.shop.Shop
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
@@ -22,7 +21,7 @@ interface Item {
     val shop: Shop
 
     fun isCommodity(): Boolean
-    fun buildItem(): ItemStack
+    fun buildItem(player: Player): ItemStack
     fun update(player: Player): ItemStack
 
     fun exeCommands(player: Player, amount: Int) {

@@ -172,7 +172,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     private fun buy(amount: Int, item: ShopItem, player: Player) {
         if (item.currency.takeMoney(player, item.price * amount)) {
             if (item.vanilla) {
-                val vanilla = item.vanillaItem()
+                val vanilla = item.vanillaItem(player)
                 vanilla.amount = amount
                 player.giveItem(vanilla)
             }
