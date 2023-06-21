@@ -25,7 +25,7 @@ taboolib {
     install("platform-bukkit")
     install("expansion-command-helper")
     classifier = null
-    version = "6.0.11-7"
+    version = "6.0.11-13"
     options("skit-kotlin")
     relocate("kotlin","libs.kotlin180")
 }
