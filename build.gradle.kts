@@ -11,6 +11,9 @@ taboolib {
             name("PlaceholderAPI").optional(true)
             name("Vault").optional(true)
         }
+        contributors {
+            name("小白")
+        }
     }
     install("common")
     install("common-5")
