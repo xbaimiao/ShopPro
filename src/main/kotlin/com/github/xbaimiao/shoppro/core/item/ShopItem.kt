@@ -25,7 +25,8 @@ abstract class ShopItem(
     override val conditionName: String?,
     val price: Double,
     val limitServer: Long,
-    val limitPlayer: Long,
+    private val limitPlayer: Long,
+    private val limitPermissionMap: Map<String, Long>,
     val currency: Currency
 ) : Item, KetherCondition {
 
@@ -44,6 +45,7 @@ abstract class ShopItem(
         itemSetting.price,
         itemSetting.limitServer,
         itemSetting.limitPlayer,
+        itemSetting.limitPermissionMap,
         itemSetting.currency
     )
 
@@ -62,6 +64,7 @@ abstract class ShopItem(
         val price: Double,
         val limitServer: Long,
         val limitPlayer: Long,
+        val limitPermissionMap: Map<String, Long>,
         var currency: Currency
     )
 
@@ -78,6 +81,10 @@ abstract class ShopItem(
 
     fun isLimit(): Boolean {
         return limitPlayer != 0L && limitServer != 0L
+    }
+
+    fun getLimitPlayer(player: Player): Long {
+        return limitPermissionMap.filter { player.hasPermission(it.key) }.maxOfOrNull { it.value } ?: limitPlayer
     }
 
     override fun update(player: Player): ItemStack {

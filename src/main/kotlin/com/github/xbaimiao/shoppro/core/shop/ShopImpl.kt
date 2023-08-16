@@ -149,16 +149,16 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
 
     private fun checkBuyLimit(amount: Int, item: ShopItem, player: Player) {
         if (item.isLimit()) {
-            if (ShopPro.database.getPlayerAlreadyData(player, item).buy >= item.limitPlayer) {
-                player.sendLang("buy-limit-player", item.limitPlayer)
+            if (ShopPro.database.getPlayerAlreadyData(player, item).buy >= item.getLimitPlayer(player)) {
+                player.sendLang("buy-limit-player", item.getLimitPlayer(player))
                 return
             }
             if (ShopPro.database.getServerAlreadyData(item).buy >= item.limitServer) {
                 player.sendLang("buy-limit-server", item.limitServer)
                 return
             }
-            if (ShopPro.database.getPlayerAlreadyData(player, item).buy + amount > item.limitPlayer) {
-                buy((item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).buy).toInt(), item, player)
+            if (ShopPro.database.getPlayerAlreadyData(player, item).buy + amount > item.getLimitPlayer(player)) {
+                buy((item.getLimitPlayer(player) - ShopPro.database.getPlayerAlreadyData(player, item).buy).toInt(), item, player)
                 return
             }
             if (ShopPro.database.getServerAlreadyData(item).buy + amount > item.limitServer) {
@@ -187,17 +187,17 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
 
     private fun checkSellLimit(amount: Int, item: ShopItem, player: Player) {
         if (item.isLimit()) {
-            if (ShopPro.database.getPlayerAlreadyData(player, item).sell >= item.limitPlayer) {
-                player.sendLang("sell-limit-player", item.limitPlayer)
+            if (ShopPro.database.getPlayerAlreadyData(player, item).sell >= item.getLimitPlayer(player)) {
+                player.sendLang("sell-limit-player", item.getLimitPlayer(player))
                 return
             }
             if (ShopPro.database.getServerAlreadyData(item).sell >= item.limitServer) {
                 player.sendLang("sell-limit-server", item.limitServer)
                 return
             }
-            if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.limitPlayer) {
+            if (ShopPro.database.getPlayerAlreadyData(player, item).sell + amount > item.getLimitPlayer(player)) {
                 sell(
-                    (item.limitPlayer - ShopPro.database.getPlayerAlreadyData(player, item).sell).toInt(),
+                    (item.getLimitPlayer(player) - ShopPro.database.getPlayerAlreadyData(player, item).sell).toInt(),
                     item,
                     player
                 )

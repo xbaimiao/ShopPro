@@ -23,6 +23,14 @@ abstract class ItemLoader {
         this.getString("currency")?.let {
             currency = CurrencyType.formString(it).func.invoke(it)
         }
+        val limitMap = HashMap<String, Long>()
+
+        this.getConfigurationSection("limitMap")?.let { limitSection ->
+            limitSection.getKeys(false).forEach { key ->
+                limitMap[key] = limitSection.getLong(key)
+            }
+        }
+
         return ShopItem.ItemSetting(
             key = char,
             material = parseToMaterial(this),
@@ -39,6 +47,7 @@ abstract class ItemLoader {
             conditionIcon = this.getString("condition-icon")?.parseToMaterial(),
             conditionLore = this.getStringList("condition-lore"),
             conditionName = this.getString("condition-name"),
+            limitPermissionMap = limitMap
         )
     }
 
