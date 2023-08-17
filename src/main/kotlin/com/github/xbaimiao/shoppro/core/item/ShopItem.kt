@@ -105,9 +105,9 @@ abstract class ShopItem(
                     .replace("\${price}", price.toString())
                     .replace("\${money}", currency.getMoney(player).toString())
                     .replace("\${price64}", (price * 64).toString())
-                    .replace("\${limit}", limitPlayer.toString())
+                    .replace("\${limit}", getLimitPlayer(player).toString())
                     .replace("\${allLimit}", limitServer.toString())
-                    .replace("\${limit-player}", (limitPlayer - playerLimit).toString())
+                    .replace("\${limit-player}", (getLimitPlayer(player) - playerLimit).toString())
                     .replace("\${limit-server}", (limitServer - serverLimit).toString())
                 if (shop.getType() == Shop.ShopType.SELL) {
                     val priceAll = (player.inventory.howManyItems {
