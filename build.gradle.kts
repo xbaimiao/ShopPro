@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("io.izzel.taboolib") version "1.54"
-    id("org.jetbrains.kotlin.jvm") version "1.8.0"
+    id("org.jetbrains.kotlin.jvm") version "1.7.10"
 }
 
 taboolib {
@@ -10,6 +10,8 @@ taboolib {
         dependencies {
             name("PlaceholderAPI").optional(true)
             name("Vault").optional(true)
+            name("MMOItems").optional(true)
+            name("Zaphkiel").optional(true)
         }
         contributors {
             name("小白")
@@ -28,9 +30,10 @@ taboolib {
     install("platform-bukkit")
     install("expansion-command-helper")
     classifier = null
-    version = "6.0.11-13"
+    version = "6.0.12-13"
     options("skit-kotlin")
-    relocate("kotlin","libs.kotlin180")
+    relocate("kotlin", "libs.kotlin171")
+    relocate("com.xbaimiao.ktor", "libs.kotlin171.ktor")
 }
 
 repositories {
@@ -40,12 +43,15 @@ repositories {
 
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
+    compileOnly("public:MythicMobs:4.14.1")
     compileOnly("public:papi:1.0.0")
     compileOnly("public:vault:1.0.0")
     compileOnly("public:points:1.0.0")
     compileOnly("ink.ptms.core:v11902:11902-minimize:mapped")
     compileOnly("ink.ptms.core:v11902:11902-minimize:universal")
     compileOnly("public:Zaphkiel:1.0.0")
+    compileOnly("public:MMOItems:6.9.4")
+    taboo("com.xbaimiao.ktor:ktor-plugins-bukkit:1.0.8")
     taboo(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }

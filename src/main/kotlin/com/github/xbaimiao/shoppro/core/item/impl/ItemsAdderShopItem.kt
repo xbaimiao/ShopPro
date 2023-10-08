@@ -15,7 +15,7 @@ class ItemsAdderShopItem(
     itemSetting: ItemSetting
 ) : ShopItem(itemSetting) {
 
-    override val material: Material
+    final override val material: Material
 
     val custom: Int
 
