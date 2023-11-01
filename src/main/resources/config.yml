@@ -8,3 +8,7 @@ mysql:
   user: "root"
   password: "123456"
   database: "shoppro"
+# 出售/购买成功的声音
+the_voice_of_success: ''
+# 出售/购买失败的声音
+the_voice_of_failure: ''
