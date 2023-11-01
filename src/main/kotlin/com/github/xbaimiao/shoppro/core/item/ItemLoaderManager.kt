@@ -12,8 +12,8 @@ class ItemLoaderManager {
         itemLoaders.add(ItemsAdderShopItem)
         itemLoaders.add(HeadShopItem)
         itemLoaders.add(ZapItem)
-        itemLoaders.add(MythicItem)
         itemLoaders.add(MMOItem)
+        itemLoaders.add(MythicItem)
     }
 
     fun getVanillaShop(): ItemLoader = VanillaShopItem.Companion

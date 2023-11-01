@@ -30,7 +30,7 @@ taboolib {
     install("platform-bukkit")
     install("expansion-command-helper")
     classifier = null
-    version = "6.0.12-13"
+    version = "6.0.12-34"
     options("skit-kotlin")
     relocate("kotlin", "libs.kotlin171")
     relocate("com.xbaimiao.ktor", "libs.kotlin171.ktor")
