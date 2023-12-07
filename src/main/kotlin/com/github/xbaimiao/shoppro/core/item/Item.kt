@@ -20,6 +20,8 @@ interface Item {
     val commands: List<String>
     val shop: Shop
 
+    val identifier: String
+
     fun isCommodity(): Boolean
     fun buildItem(player: Player): ItemStack
     fun update(player: Player): ItemStack

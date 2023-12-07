@@ -27,7 +27,7 @@ object Commands {
             }
             execute<Player> { sender, _, argument ->
                 val shop = ShopManager.shops.first { it.getName() == argument }
-                if (!sender.hasPermission("shoppro.command.open.${shop.getName()}")){
+                if (!sender.hasPermission("shoppro.command.open.${shop.getName()}")) {
                     sender.sendLang("shop-not-permission")
                     return@execute
                 }
@@ -90,6 +90,14 @@ object Commands {
         execute<CommandSender> { sender, _, _ ->
             ShopPro.reload()
             sender.sendLang("reload")
+        }
+    }
+
+    @CommandBody(permission = "shoppro.resetincrease")
+    val resetincrease = subCommand {
+        execute<CommandSender> { sender, _, _ ->
+            ShopPro.database.resetBuyAmount()
+            sender.sendLang("resetincrease")
         }
     }
 

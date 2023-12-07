@@ -23,11 +23,13 @@ abstract class ShopItem(
     override val conditionIcon: Material?,
     override val conditionLore: List<String>,
     override val conditionName: String?,
-    val price: Double,
+    val originalPrice: Double,
+    var price: Double,
     val limitServer: Long,
     private val limitPlayer: Long,
     private val limitPermissionMap: Map<String, Long>,
-    val currency: Currency
+    val currency: Currency,
+    val increase: Double
 ) : Item, KetherCondition {
 
     constructor(itemSetting: ItemSetting) : this(
@@ -43,10 +45,12 @@ abstract class ShopItem(
         itemSetting.conditionLore,
         itemSetting.conditionName,
         itemSetting.price,
+        itemSetting.price,
         itemSetting.limitServer,
         itemSetting.limitPlayer,
         itemSetting.limitPermissionMap,
-        itemSetting.currency
+        itemSetting.currency,
+        itemSetting.increase,
     )
 
     class ItemSetting(
@@ -65,8 +69,17 @@ abstract class ShopItem(
         val limitServer: Long,
         val limitPlayer: Long,
         val limitPermissionMap: Map<String, Long>,
-        var currency: Currency
+        var currency: Currency,
+        val increase: Double
     )
+
+    init {
+        price =
+            String.format("%.2f", originalPrice + ((originalPrice * increase) * ShopPro.database.getBuyAmount(this)))
+                .toDouble()
+    }
+
+    override val identifier: String get() = "$key:$material"
 
     override fun isCommodity(): Boolean {
         return true

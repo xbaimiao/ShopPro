@@ -45,11 +45,21 @@ class SQLiteDatabase : SqlDatabase() {
         }
     }
 
+    override val buyAmountTable: Table<*, *> = Table(buyAmountTableName, host) {
+        add(itemKeyLine) {
+            type(ColumnTypeSQLite.TEXT, 255)
+        }
+        add(dataLine) {
+            type(ColumnTypeSQLite.INTEGER, 255)
+        }
+    }
+
     override val dataSource = host.createDataSource()
 
     init {
         serverTable.workspace(dataSource) { createTable() }.run()
         playerTable.workspace(dataSource) { createTable() }.run()
+        buyAmountTable.workspace(dataSource) { createTable() }.run()
         submit(async = true, delay = 20, period = 20) {
             val currentDay = Date().day
             if (currentDay != ShopPro.config.getInt("date")) {

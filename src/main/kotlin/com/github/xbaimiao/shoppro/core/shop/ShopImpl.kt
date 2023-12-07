@@ -147,6 +147,10 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         }
     }
 
+    override fun getAllItem(): Collection<Item> {
+        return items
+    }
+
     private fun checkBuyLimit(amount: Int, item: ShopItem, player: Player) {
         if (item.isLimit()) {
             if (ShopPro.database.getPlayerAlreadyData(player, item).buy >= item.getLimitPlayer(player)) {
@@ -188,6 +192,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
             }
             Bukkit.getPluginManager().callEvent(ShopProBuyEvent(item, amount, player))
             ShopPro.database.addAmount(item, player, LimitData(amount.toLong(), 0L))
+            ShopPro.database.addBuyAmount(item, amount)
             item.exeCommands(player, amount)
             player.sendLang("buy-item", amount, item.name, item.price * amount)
             ShopPro.config.getString("the_voice_of_success")?.let {

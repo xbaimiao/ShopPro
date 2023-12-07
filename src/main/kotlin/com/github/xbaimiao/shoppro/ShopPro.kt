@@ -25,20 +25,24 @@ object ShopPro : Plugin(), KtorStat {
     val itemLoaderManager = ItemLoaderManager()
 
     override fun onActive() {
-        KtorPluginsBukkit.init(BukkitPlugin.getInstance(), this)
-        info("$userId 感谢您的使用")
-        stat()
+        runCatching { userId }.getOrNull()?.let {
+            KtorPluginsBukkit.init(BukkitPlugin.getInstance(), this)
+            info("$userId 感谢您的使用")
+            stat()
+        }
+        database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
+
         ShopManager.load()
         DiyCurrency.load()
-        database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
     }
 
     fun reload() {
         config.reload()
         ShopManager.shops.clear()
+        database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
+
         ShopManager.load()
         DiyCurrency.load()
-        database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
     }
 
 }

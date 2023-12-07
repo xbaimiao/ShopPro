@@ -28,6 +28,7 @@ class ItemImpl(
 
     var custom: Int? = null
     var head: String? = null
+    override val identifier: String get() = "ItemImpl:$material:$custom"
 
     init {
         if (materialString.startsWith("HEAD:")) {

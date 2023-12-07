@@ -1,10 +1,15 @@
 package com.github.xbaimiao.shoppro.core.database
 
+import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
+import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import org.bukkit.entity.Player
 import taboolib.module.database.Host
 import taboolib.module.database.Table
+import taboolib.module.database.use
+import java.sql.Connection
 import javax.sql.DataSource
 
 abstract class SqlDatabase : Database {
@@ -12,10 +17,12 @@ abstract class SqlDatabase : Database {
     abstract val host: Host<*>
     abstract val playerTable: Table<*, *>
     abstract val serverTable: Table<*, *>
+    abstract val buyAmountTable: Table<*, *>
     abstract val dataSource: DataSource
 
     val serverTableName = "server"
     val playerTableName = "player"
+    val buyAmountTableName = "buyAmount"
 
     val itemKeyLine = "item-key"
     val itemMaterialLine = "item-material"
@@ -103,6 +110,70 @@ abstract class SqlDatabase : Database {
                     value(item.key.toString(), item.material.toString(), custom, amount.toString())
                 }
             }.run()
+        }
+    }
+
+    override fun addBuyAmount(item: Item, amount: Int) {
+        dataSource.connection.use { connection: Connection ->
+            var resultAmount: Int = amount
+
+            val statement =
+                connection.prepareStatement("SELECT `$dataLine` FROM `$buyAmountTableName` WHERE `$itemKeyLine` = ?;")
+            statement.setString(1, item.identifier)
+
+            val resultSet = statement.executeQuery()
+            if (resultSet.next()) {
+                val data = resultSet.getInt(dataLine)
+                connection.prepareStatement("UPDATE `$buyAmountTableName` SET `$dataLine` = ? WHERE `$itemKeyLine` = ?;")
+                    .use {
+                        resultAmount = data + amount
+                        it.setInt(1, resultAmount)
+                        it.setString(2, item.identifier)
+                        it.executeUpdate()
+                    }
+
+            } else {
+                connection.prepareStatement("INSERT INTO `$buyAmountTableName` VALUES (?,?);").use {
+                    it.setString(1, item.identifier)
+                    it.setInt(2, amount)
+                    it.executeUpdate()
+                }
+            }
+
+            statement.close()
+            if (item is ShopItem) {
+                item.price =
+                    String.format("%.2f", item.originalPrice + ((item.originalPrice * item.increase) * resultAmount))
+                        .toDouble()
+            }
+        }
+    }
+
+    override fun getBuyAmount(item: Item): Int {
+        return dataSource.connection.use { connection: Connection ->
+            connection.prepareStatement("SELECT `$dataLine` FROM `$buyAmountTableName` WHERE `$itemKeyLine` = ?;")
+                .use { statement ->
+                    statement.setString(1, item.identifier)
+                    val resultSet = statement.executeQuery()
+                    if (resultSet.next()) {
+                        resultSet.getInt(dataLine)
+                    } else {
+                        0
+                    }
+                }
+        }
+    }
+
+    override fun resetBuyAmount() {
+        playerTable.workspace(dataSource) {
+            executeUpdate("DELETE FROM $buyAmountTableName;").run()
+        }.run()
+        for (shop in ShopManager.shops) {
+            for (item in shop.getAllItem()) {
+                if (item is ShopItem) {
+                    item.price = item.originalPrice
+                }
+            }
         }
     }
 

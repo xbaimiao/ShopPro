@@ -25,6 +25,12 @@ interface Database {
      */
     fun setServerAlreadyData(item: Item, amount: LimitData)
 
+    fun addBuyAmount(item: Item, amount: Int)
+
+    fun getBuyAmount(item: Item): Int
+
+    fun resetBuyAmount()
+
     fun addAmount(item: Item, player: Player, amount: LimitData)
 
     fun reset()
