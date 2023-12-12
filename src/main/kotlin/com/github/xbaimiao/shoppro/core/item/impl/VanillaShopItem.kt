@@ -23,6 +23,7 @@ open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
         return taboolib.platform.util.buildItem(material) {
             this.name = this@VanillaShopItem.name
             this.lore.addAll(this@VanillaShopItem.lore)
+            this.damage = this@VanillaShopItem.damage
         }
     }
 

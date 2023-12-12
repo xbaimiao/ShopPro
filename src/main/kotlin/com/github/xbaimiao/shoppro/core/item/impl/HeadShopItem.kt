@@ -42,6 +42,7 @@ class HeadShopItem(
             this.name = this@HeadShopItem.name
             this.lore.addAll(this@HeadShopItem.lore)
             skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
+            this.damage = this@HeadShopItem.damage
         }
     }
 

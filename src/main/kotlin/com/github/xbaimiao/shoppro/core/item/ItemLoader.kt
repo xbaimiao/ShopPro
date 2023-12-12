@@ -48,7 +48,8 @@ abstract class ItemLoader {
             conditionLore = this.getStringList("condition-lore"),
             conditionName = this.getString("condition-name"),
             limitPermissionMap = limitMap,
-            increase = this.getDouble("increase")
+            increase = this.getDouble("increase"),
+            damage = this.getInt("durability")
         )
     }
 

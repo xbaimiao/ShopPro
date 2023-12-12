@@ -16,6 +16,7 @@ abstract class ShopItem(
     override val material: Material,
     override val name: String,
     override val lore: List<String>,
+    override val damage: Int,
     override val vanilla: Boolean,
     override val commands: List<String>,
     override val shop: Shop,
@@ -37,6 +38,7 @@ abstract class ShopItem(
         itemSetting.material,
         itemSetting.name,
         itemSetting.lore,
+        itemSetting.damage,
         itemSetting.vanilla,
         itemSetting.commands,
         itemSetting.shop,
@@ -70,7 +72,8 @@ abstract class ShopItem(
         val limitPlayer: Long,
         val limitPermissionMap: Map<String, Long>,
         var currency: Currency,
-        val increase: Double
+        val increase: Double,
+        val damage: Int
     )
 
     init {

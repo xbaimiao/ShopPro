@@ -16,6 +16,7 @@ interface Item {
     val material: Material
     val lore: List<String>
     val name: String
+    val damage: Int
     val vanilla: Boolean
     val commands: List<String>
     val shop: Shop

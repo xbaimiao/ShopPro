@@ -25,6 +25,8 @@ items:
       - '[open] 默认收购商店'
   Q:
     material: COAL
+    # 附加值 适用于低版本
+    # durability: 1
     name: '&f&l煤炭'
     price: 0.5
     lore:

@@ -18,6 +18,7 @@ class ItemImpl(
     materialString: String,
     override val lore: List<String>,
     override val name: String,
+    override val damage: Int,
     override val key: Char,
     override val vanilla: Boolean,
     override val commands: List<String>,
@@ -56,6 +57,7 @@ class ItemImpl(
             head?.let {
                 skullTexture = ItemBuilder.SkullTexture(it, UUID.randomUUID())
             }
+            this.damage = this@ItemImpl.damage
         }
     }
 
@@ -80,6 +82,7 @@ class ItemImpl(
                 section.getString("material")!!,
                 section.getStringList("lore").colored(),
                 section.getString("name")!!.colored(),
+                section.getInt("durability"),
                 char,
                 section.getBoolean("vanilla", true),
                 section.getStringList("commands"),

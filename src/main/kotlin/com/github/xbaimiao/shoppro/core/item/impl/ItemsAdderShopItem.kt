@@ -46,6 +46,7 @@ class ItemsAdderShopItem(
             this.name = this@ItemsAdderShopItem.name
             this.lore.addAll(this@ItemsAdderShopItem.lore)
             this.customModelData = custom
+            this.damage = this@ItemsAdderShopItem.damage
         }
     }
 
