@@ -45,7 +45,8 @@ class MythicItem(
             if (!item.isPresent) {
                 error("MythicMobs $mmID not found")
             }
-            return MythicItem(BukkitAdapter.adapt(item.get().generateItemStack(1)), section.toItemSetting(char, shop))
+            val i = BukkitAdapter.adapt(item.get().generateItemStack(1)) ?: error("MythicMobs $mmID not found")
+            return MythicItem(i, section.toItemSetting(char, shop))
         }
 
         override fun parseToMaterial(section: ConfigurationSection): Material {

@@ -96,7 +96,7 @@ object Commands {
     @CommandBody(permission = "shoppro.resetincrease")
     val resetincrease = subCommand {
         execute<CommandSender> { sender, _, _ ->
-            ShopPro.database.resetBuyAmount()
+            ShopPro.database.resetTradeAmount()
             sender.sendLang("resetincrease")
         }
     }

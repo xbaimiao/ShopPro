@@ -13,8 +13,11 @@ import org.bukkit.Bukkit
 import org.bukkit.configuration.Configuration
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.info
+import taboolib.common.platform.function.submit
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.chat.colored
 import taboolib.module.ui.ClickType
+import taboolib.module.ui.buildMenu
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Basic
 import taboolib.platform.util.giveItem
@@ -22,10 +25,12 @@ import taboolib.platform.util.hasItem
 import taboolib.platform.util.sendLang
 import taboolib.platform.util.takeItem
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.locks.ReentrantLock
 
 class ShopImpl(private val configuration: Configuration) : Shop() {
 
     private val slots = configuration.getStringList("slots").map { it.toCharArray().toList() }
+    private val lock = ReentrantLock()
 
     private val items = ArrayList<Item>()
 
@@ -82,67 +87,78 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     }
 
     override fun open(player: Player) {
-        player.openMenu<Basic>(getTitle(player)) {
-            rows(slots.size)
-            slots = CopyOnWriteArrayList<List<Char>>().also { it.addAll(this@ShopImpl.slots) }
-            onClick {
-                it.isCancelled = true
-            }
-            for (item in this@ShopImpl.items) {
-                var canBuyOrSell = true
-                if (item is KetherCondition && !item.check(player)) {
-                    canBuyOrSell = false
-                }
-                if (!canBuyOrSell && item is KetherCondition) {
-                    set(item.key, item.conditionItem(player))
-                    continue
-                }
-                set(item.key, item.update(player))
-                // buy and sell
-                if (item is ShopItem) {
-                    if (getType() == ShopType.BUY) {
-                        onClick(item.key) { event ->
-                            if (event.clickType != ClickType.CLICK) {
-                                return@onClick
-                            }
-                            val amount = when (event.clickEvent().click) {
-                                org.bukkit.event.inventory.ClickType.LEFT -> 1
-                                org.bukkit.event.inventory.ClickType.RIGHT -> 64
-                                else -> return@onClick
-                            }
-                            checkBuyLimit(amount, item, player)
-                            event.currentItem?.let {
-                                event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
-                            }
-                        }
+        submitAsync {
+            lock.lock()
+            try {
+                val basic = buildMenu<Basic>(getTitle(player)) {
+                    rows(slots.size)
+                    slots = CopyOnWriteArrayList<List<Char>>().also { it.addAll(this@ShopImpl.slots) }
+                    onClick {
+                        it.isCancelled = true
                     }
-                    if (getType() == ShopType.SELL) {
-                        onClick(item.key) { event ->
-                            if (event.clickType != ClickType.CLICK) {
-                                return@onClick
-                            }
-                            val amount = when (event.clickEvent().click) {
-                                org.bukkit.event.inventory.ClickType.LEFT -> 1
-                                org.bukkit.event.inventory.ClickType.RIGHT -> 64
-                                org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
-                                    player.inventory.howManyItems {
-                                        item.equal(it)
+                    for (item in this@ShopImpl.items) {
+                        var canBuyOrSell = true
+                        if (item is KetherCondition && !item.check(player)) {
+                            canBuyOrSell = false
+                        }
+                        if (!canBuyOrSell && item is KetherCondition) {
+                            set(item.key, item.conditionItem(player))
+                            continue
+                        }
+                        set(item.key, item.update(player))
+                        // buy and sell
+                        if (item is ShopItem) {
+                            item.updatePrice()
+                            if (getType() == ShopType.BUY) {
+                                onClick(item.key) { event ->
+                                    if (event.clickType != ClickType.CLICK) {
+                                        return@onClick
+                                    }
+                                    val amount = when (event.clickEvent().click) {
+                                        org.bukkit.event.inventory.ClickType.LEFT -> 1
+                                        org.bukkit.event.inventory.ClickType.RIGHT -> 64
+                                        else -> return@onClick
+                                    }
+                                    checkBuyLimit(amount, item, player)
+                                    event.currentItem?.let {
+                                        event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
                                     }
                                 }
-
-                                else -> return@onClick
                             }
-                            checkSellLimit(amount, item, player)
-                            event.currentItem?.let {
-                                event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
+                            if (getType() == ShopType.SELL) {
+                                onClick(item.key) { event ->
+                                    if (event.clickType != ClickType.CLICK) {
+                                        return@onClick
+                                    }
+                                    val amount = when (event.clickEvent().click) {
+                                        org.bukkit.event.inventory.ClickType.LEFT -> 1
+                                        org.bukkit.event.inventory.ClickType.RIGHT -> 64
+                                        org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
+                                            player.inventory.howManyItems {
+                                                item.equal(it)
+                                            }
+                                        }
+
+                                        else -> return@onClick
+                                    }
+                                    checkSellLimit(amount, item, player)
+                                    event.currentItem?.let {
+                                        event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
+                                    }
+                                }
+                            }
+                        } else {
+                            onClick(item.key) {
+                                item.exeCommands(player, 1)
                             }
                         }
                     }
-                } else {
-                    onClick(item.key) {
-                        item.exeCommands(player, 1)
-                    }
                 }
+                submit {
+                    player.openMenu(basic)
+                }
+            } finally {
+                lock.unlock()
             }
         }
     }
@@ -192,7 +208,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
             }
             Bukkit.getPluginManager().callEvent(ShopProBuyEvent(item, amount, player))
             ShopPro.database.addAmount(item, player, LimitData(amount.toLong(), 0L))
-            ShopPro.database.addBuyAmount(item, amount)
+            ShopPro.database.addTradeAmount(item, amount)
             item.exeCommands(player, amount)
             player.sendLang("buy-item", amount, item.name, item.price * amount)
             ShopPro.config.getString("the_voice_of_success")?.let {
@@ -244,6 +260,7 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
             item.currency.giveMoney(player, item.price * amount)
             Bukkit.getPluginManager().callEvent(ShopProSellEvent(item, amount, player))
             ShopPro.database.addAmount(item, player, LimitData(0L, amount.toLong()))
+            ShopPro.database.addTradeAmount(item, -amount)
             player.sendLang("sell-item", amount, item.name, item.price * amount)
             ShopPro.config.getString("the_voice_of_success")?.let {
                 player.playSound(player.location, it, 100f, 1f)

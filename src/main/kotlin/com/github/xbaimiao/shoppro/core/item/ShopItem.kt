@@ -77,15 +77,19 @@ abstract class ShopItem(
     )
 
     init {
-        price =
-            String.format("%.2f", originalPrice + ((originalPrice * increase) * ShopPro.database.getBuyAmount(this)))
-                .toDouble()
+        updatePrice()
     }
 
-    override val identifier: String get() = "$key:$material"
+    override val identifier: String get() = "$material"
 
     override fun isCommodity(): Boolean {
         return true
+    }
+
+    fun updatePrice() {
+        price =
+            String.format("%.2f", originalPrice + ((originalPrice * increase) * ShopPro.database.getTradeAmount(this)))
+                .toDouble()
     }
 
     /**

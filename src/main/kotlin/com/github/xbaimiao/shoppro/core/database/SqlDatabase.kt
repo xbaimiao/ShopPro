@@ -1,6 +1,5 @@
 package com.github.xbaimiao.shoppro.core.database
 
-import com.github.xbaimiao.shoppro.ShopPro
 import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
@@ -113,7 +112,7 @@ abstract class SqlDatabase : Database {
         }
     }
 
-    override fun addBuyAmount(item: Item, amount: Int) {
+    override fun addTradeAmount(item: Item, amount: Int) {
         dataSource.connection.use { connection: Connection ->
             var resultAmount: Int = amount
 
@@ -141,15 +140,10 @@ abstract class SqlDatabase : Database {
             }
 
             statement.close()
-            if (item is ShopItem) {
-                item.price =
-                    String.format("%.2f", item.originalPrice + ((item.originalPrice * item.increase) * resultAmount))
-                        .toDouble()
-            }
         }
     }
 
-    override fun getBuyAmount(item: Item): Int {
+    override fun getTradeAmount(item: Item): Int {
         return dataSource.connection.use { connection: Connection ->
             connection.prepareStatement("SELECT `$dataLine` FROM `$buyAmountTableName` WHERE `$itemKeyLine` = ?;")
                 .use { statement ->
@@ -164,7 +158,7 @@ abstract class SqlDatabase : Database {
         }
     }
 
-    override fun resetBuyAmount() {
+    override fun resetTradeAmount() {
         playerTable.workspace(dataSource) {
             executeUpdate("DELETE FROM $buyAmountTableName;").run()
         }.run()

@@ -26,7 +26,7 @@ class ItemsAdderShopItem(
         }
     }
 
-    override val identifier: String get() = "$key:$material:$custom"
+    override val identifier: String get() = "$material:$custom"
 
     override fun equal(itemStack: ItemStack): Boolean {
         if (itemStack.hasItemMeta() && itemStack.itemMeta!!.hasCustomModelData()) {

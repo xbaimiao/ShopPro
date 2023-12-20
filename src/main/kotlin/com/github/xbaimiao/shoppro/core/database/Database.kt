@@ -25,11 +25,20 @@ interface Database {
      */
     fun setServerAlreadyData(item: Item, amount: LimitData)
 
-    fun addBuyAmount(item: Item, amount: Int)
+    /**
+     * 添加该商品交易次数
+     */
+    fun addTradeAmount(item: Item, amount: Int)
 
-    fun getBuyAmount(item: Item): Int
+    /**
+     * 获取该商品交易次数
+     */
+    fun getTradeAmount(item: Item): Int
 
-    fun resetBuyAmount()
+    /**
+     * 重置该商品交易次数
+     */
+    fun resetTradeAmount()
 
     fun addAmount(item: Item, player: Player, amount: LimitData)
 
