@@ -1,6 +1,9 @@
 package com.github.xbaimiao.shoppro.core.shop
 
+import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.ShopItem
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 abstract class Shop {
 
@@ -24,5 +27,9 @@ abstract class Shop {
     abstract fun sellAll(player: Player)
 
     abstract fun open(player: Player)
+
+    abstract fun getItems(): Collection<Item>
+
+    abstract fun sellItem(player: Player, shopItem: ShopItem, itemStack: ItemStack): Boolean
 
 }

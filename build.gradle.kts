@@ -14,7 +14,7 @@ taboolib {
             name("Zaphkiel").optional(true)
         }
         contributors {
-            name("小白")
+            name("xbaimiao")
         }
     }
     install("common")
