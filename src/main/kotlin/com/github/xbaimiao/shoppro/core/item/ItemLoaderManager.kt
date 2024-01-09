@@ -14,6 +14,7 @@ class ItemLoaderManager {
         itemLoaders.add(ZapItem)
         itemLoaders.add(MMOItem)
         itemLoaders.add(MythicItem)
+        itemLoaders.add(NeigeItem)
     }
 
     fun getVanillaShop(): ItemLoader = VanillaShopItem.Companion

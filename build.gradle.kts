@@ -12,6 +12,7 @@ taboolib {
             name("Vault").optional(true)
             name("MMOItems").optional(true)
             name("Zaphkiel").optional(true)
+            name("NeigeItems").optional(true)
         }
         contributors {
             name("xbaimiao")
@@ -39,6 +40,7 @@ taboolib {
 repositories {
     mavenCentral()
     maven("https://maven.xbaimiao.com/repository/maven-public/")
+    maven("https://r.irepo.space/maven/")
 }
 
 dependencies {
@@ -50,6 +52,7 @@ dependencies {
     compileOnly("ink.ptms.core:v11902:11902-minimize:mapped")
     compileOnly("ink.ptms.core:v11902:11902-minimize:universal")
     compileOnly("public:Zaphkiel:1.0.0")
+    compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("public:MMOItems:6.9.4")
     taboo("com.xbaimiao.ktor:ktor-plugins-bukkit:1.0.8")
     taboo(kotlin("stdlib"))
