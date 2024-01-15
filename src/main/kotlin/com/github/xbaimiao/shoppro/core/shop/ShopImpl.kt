@@ -9,6 +9,8 @@ import com.github.xbaimiao.shoppro.core.item.KetherCondition
 import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.util.Util.howManyItems
 import com.github.xbaimiao.shoppro.util.Util.replacePapi
+import io.lumine.xikage.mythicmobs.utils.adventure.text.minimessage.MiniMessage
+import io.lumine.xikage.mythicmobs.utils.adventure.text.minimessage.MiniMessageImpl
 import org.bukkit.Bukkit
 import org.bukkit.configuration.Configuration
 import org.bukkit.entity.Player
@@ -122,17 +124,32 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                             if (event.clickType != ClickType.CLICK) {
                                 return@onClick
                             }
-                            val amount = when (event.clickEvent().click) {
-                                org.bukkit.event.inventory.ClickType.LEFT -> 1
-                                org.bukkit.event.inventory.ClickType.RIGHT -> 64
-                                org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
-                                    player.inventory.howManyItems {
-                                        item.equal(it)
+                            val amount : Int
+                            if (configuration.getBoolean("items.${item.key}.right_click")){
+                                amount = when (event.clickEvent().click) {
+                                    org.bukkit.event.inventory.ClickType.LEFT -> 1
+                                    org.bukkit.event.inventory.ClickType.RIGHT -> 64
+                                    org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
+                                        player.inventory.howManyItems {
+                                            item.equal(it)
+                                        }
                                     }
-                                }
 
-                                else -> return@onClick
+                                    else -> return@onClick
+                                }
+                            }else{
+                                amount = when (event.clickEvent().click) {
+                                    org.bukkit.event.inventory.ClickType.LEFT -> 1
+                                    org.bukkit.event.inventory.ClickType.SHIFT_RIGHT -> {
+                                        player.inventory.howManyItems {
+                                            item.equal(it)
+                                        }
+                                    }
+
+                                    else -> return@onClick
+                                }
                             }
+
                             checkSellLimit(amount, item, player)
                             event.currentItem?.let {
                                 event.clickEvent().inventory.setItem(event.rawSlot, item.update(player))
