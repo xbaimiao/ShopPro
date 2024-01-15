@@ -21,7 +21,8 @@ class ItemImpl(
     override val key: Char,
     override val vanilla: Boolean,
     override val commands: List<String>,
-    override val shop: Shop
+    override val shop: Shop,
+    override val enableRight: Boolean
 ) : Item {
 
     override lateinit var material: Material
@@ -82,7 +83,8 @@ class ItemImpl(
                 char,
                 section.getBoolean("vanilla", true),
                 section.getStringList("commands"),
-                shop
+                shop,
+                section.getBoolean("right_click", true)
             )
         }
     }

@@ -19,6 +19,7 @@ interface Item {
     val vanilla: Boolean
     val commands: List<String>
     val shop: Shop
+    val enableRight: Boolean
 
     fun isCommodity(): Boolean
     fun buildItem(player: Player): ItemStack

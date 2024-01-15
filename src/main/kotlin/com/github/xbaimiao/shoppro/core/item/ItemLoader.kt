@@ -47,7 +47,8 @@ abstract class ItemLoader {
             conditionIcon = this.getString("condition-icon")?.parseToMaterial(),
             conditionLore = this.getStringList("condition-lore"),
             conditionName = this.getString("condition-name"),
-            limitPermissionMap = limitMap
+            limitPermissionMap = limitMap,
+            enableRight = this.getBoolean("right_click", true)
         )
     }
 

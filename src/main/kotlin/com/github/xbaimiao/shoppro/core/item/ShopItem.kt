@@ -27,7 +27,8 @@ abstract class ShopItem(
     val limitServer: Long,
     private val limitPlayer: Long,
     private val limitPermissionMap: Map<String, Long>,
-    val currency: Currency
+    val currency: Currency,
+    override val enableRight: Boolean
 ) : Item, KetherCondition {
 
     constructor(itemSetting: ItemSetting) : this(
@@ -46,7 +47,8 @@ abstract class ShopItem(
         itemSetting.limitServer,
         itemSetting.limitPlayer,
         itemSetting.limitPermissionMap,
-        itemSetting.currency
+        itemSetting.currency,
+        itemSetting.enableRight
     )
 
     class ItemSetting(
@@ -65,7 +67,8 @@ abstract class ShopItem(
         val limitServer: Long,
         val limitPlayer: Long,
         val limitPermissionMap: Map<String, Long>,
-        var currency: Currency
+        var currency: Currency,
+        val enableRight: Boolean
     )
 
     override fun isCommodity(): Boolean {
