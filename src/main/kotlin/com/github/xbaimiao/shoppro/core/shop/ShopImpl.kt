@@ -211,50 +211,40 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
     override fun sellItem(player: Player, shopItem: ShopItem, itemStack: ItemStack): Boolean {
         val amount = itemStack.amount
         if (shopItem.isLimit()) {
-            if (ShopPro.database.getPlayerAlreadyData(player, shopItem).sell >= shopItem.getLimitPlayer(player)) {
+            val alreadyPlayerData = ShopPro.database.getPlayerAlreadyData(player, shopItem)
+            if (alreadyPlayerData.sell >= shopItem.getLimitPlayer(player)) {
                 player.sendLang("sell-limit-player", shopItem.getLimitPlayer(player))
                 ShopPro.config.getString("the_voice_of_failure")?.let {
                     player.playSound(player.location, it, 100f, 1f)
                 }
                 return false
             }
-            if (ShopPro.database.getServerAlreadyData(shopItem).sell >= shopItem.limitServer) {
+            val alreadyServerData = ShopPro.database.getServerAlreadyData(shopItem)
+            if (alreadyServerData.sell >= shopItem.limitServer) {
                 player.sendLang("sell-limit-server", shopItem.limitServer)
                 ShopPro.config.getString("the_voice_of_failure")?.let {
                     player.playSound(player.location, it, 100f, 1f)
                 }
                 return false
             }
-            if (ShopPro.database.getPlayerAlreadyData(
-                    player,
-                    shopItem
-                ).sell + amount > shopItem.getLimitPlayer(player)
-            ) {
-                sell(
-                    (shopItem.getLimitPlayer(player) - ShopPro.database.getPlayerAlreadyData(
-                        player,
-                        shopItem
-                    ).sell).toInt(),
-                    shopItem,
-                    player
-                )
+            if (alreadyPlayerData.sell + amount > shopItem.getLimitPlayer(player)) {
+                sell((shopItem.getLimitPlayer(player) - alreadyPlayerData.sell).toInt(), shopItem, player)
                 return false
             }
-            if (ShopPro.database.getServerAlreadyData(shopItem).sell + amount > shopItem.limitServer) {
-                sell(
-                    (shopItem.limitServer - ShopPro.database.getServerAlreadyData(shopItem).sell).toInt(),
-                    shopItem,
-                    player
-                )
+            if (alreadyServerData.sell + amount > shopItem.limitServer) {
+                sell((shopItem.limitServer - alreadyServerData.sell).toInt(), shopItem, player)
                 return false
             }
         }
         if (!shopItem.equal(itemStack)) {
             error("!item.equal(itemStack)")
         }
+
         shopItem.currency.giveMoney(player, shopItem.price * amount)
+        if (shopItem.isLimit()) {
+            ShopPro.database.addAmount(shopItem, player, LimitData(0L, amount.toLong()))
+        }
         Bukkit.getPluginManager().callEvent(ShopProSellEvent(shopItem, amount, player))
-        ShopPro.database.addAmount(shopItem, player, LimitData(0L, amount.toLong()))
         player.sendLang("sell-item", amount, shopItem.name, shopItem.price * amount)
         ShopPro.config.getString("the_voice_of_success")?.let {
             player.playSound(player.location, it, 100f, 1f)
