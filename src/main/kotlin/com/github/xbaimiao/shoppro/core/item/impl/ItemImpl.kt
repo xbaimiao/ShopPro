@@ -9,8 +9,8 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.library.xseries.XSkull
 import taboolib.module.chat.colored
-import taboolib.platform.util.ItemBuilder
 import taboolib.platform.util.modifyLore
 import java.util.*
 
@@ -54,7 +54,7 @@ class ItemImpl(
             this.lore.addAll(this@ItemImpl.lore)
             custom?.let { customModelData = it }
             head?.let {
-                skullTexture = ItemBuilder.SkullTexture(it, UUID.randomUUID())
+                skullTexture = XSkull.SkullTexture(it, UUID.randomUUID())
             }
         }
     }

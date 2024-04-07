@@ -4,8 +4,6 @@ import com.github.xbaimiao.shoppro.core.item.ShopItem
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
-import org.bukkit.event.inventory.ClickType
-import org.bukkit.inventory.Inventory
 
 class ShopProSellEvent(
     val item: ShopItem,
@@ -21,7 +19,7 @@ class ShopProSellEvent(
         private val handlerList = HandlerList()
 
         @JvmStatic
-        fun getHandlerList(): HandlerList? {
+        fun getHandlerList(): HandlerList {
             return handlerList
         }
     }

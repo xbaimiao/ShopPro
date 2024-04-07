@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.library.xseries.XSkull
 import taboolib.library.xseries.parseToMaterial
 import taboolib.platform.util.ItemBuilder
 import java.util.*
@@ -29,7 +30,7 @@ class HeadShopItem(
 
     override fun vanillaItem(player: Player): ItemStack {
         return taboolib.platform.util.buildItem(material) {
-            skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
+            skullTexture = XSkull.SkullTexture(head, UUID.randomUUID())
         }
     }
 
@@ -41,7 +42,7 @@ class HeadShopItem(
         return taboolib.platform.util.buildItem(material) {
             this.name = this@HeadShopItem.name
             this.lore.addAll(this@HeadShopItem.lore)
-            skullTexture = ItemBuilder.SkullTexture(head, UUID.randomUUID())
+            skullTexture = XSkull.SkullTexture(head, UUID.randomUUID())
         }
     }
 

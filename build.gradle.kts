@@ -1,7 +1,9 @@
+import io.izzel.taboolib.gradle.*
+
 plugins {
     `java-library`
     `maven-publish`
-    id("io.izzel.taboolib") version "1.56"
+    id("io.izzel.taboolib") version "2.0.11"
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
 }
 
@@ -18,23 +20,16 @@ taboolib {
             name("xbaimiao")
         }
     }
-    install("common")
-    install("common-5")
-    install("module-chat")
-    install("module-configuration")
-    install("module-database")
-    install("module-lang")
-    install("module-ui")
-    install("module-nms-util")
-    install("module-nms")
-    install("module-kether")
-    install("platform-bukkit")
-    install("expansion-command-helper")
-    classifier = null
-    version = "6.0.12-68"
-    options("skit-kotlin")
-    relocate("kotlin", "libs.kotlin171")
-    relocate("com.xbaimiao.ktor", "libs.kotlin171.ktor")
+    env {
+        install(NMS_UTIL, UI)
+        install(EXPANSION_COMMAND_HELPER, BUKKIT_ALL)
+        install(DATABASE, CHAT, CONFIGURATION, LANG, NMS, KETHER)
+    }
+    version {
+        taboolib = "6.1.1-beta17"
+    }
+//    relocate("kotlin", "libs.kotlin171")
+    relocate("com.xbaimiao.ktor", "com.github.xbaimiao.shoppro.stat")
 }
 
 repositories {
@@ -55,7 +50,7 @@ dependencies {
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("public:MMOItems:6.9.4")
     taboo("com.xbaimiao.ktor:ktor-plugins-bukkit:1.0.8")
-    taboo(kotlin("stdlib"))
+//    taboo(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }
 
@@ -75,23 +70,3 @@ configure<JavaPluginConvention> {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-publishing {
-    repositories {
-        maven {
-            url = uri("https://repo.tabooproject.org/repository/releases")
-            credentials {
-                username = project.findProperty("taboolibUsername").toString()
-                password = project.findProperty("taboolibPassword").toString()
-            }
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
-    }
-    publications {
-        create<MavenPublication>("library") {
-            from(components["java"])
-            groupId = project.group.toString()
-        }
-    }
-}
