@@ -29,7 +29,7 @@ interface KetherCondition {
         if (conditionIcon == null || conditionName == null) {
             return ItemStack(Material.AIR)
         }
-        return taboolib.platform.util.buildItem(conditionIcon!!) {
+        return com.github.xbaimiao.shoppro.util.buildItem(conditionIcon!!) {
             name = conditionName!!.colored().replacePapi(player)
             conditionLore.forEach {
                 lore += it.colored().replacePapi(player)

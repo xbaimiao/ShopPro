@@ -15,7 +15,7 @@ class ItemsAdderShopItem(
     itemSetting: ItemSetting
 ) : ShopItem(itemSetting) {
 
-    final override val material: Material
+    override val material: Material
 
     val custom: Int
 
@@ -34,13 +34,13 @@ class ItemsAdderShopItem(
     }
 
     override fun vanillaItem(player: Player): ItemStack {
-        return taboolib.platform.util.buildItem(material) {
+        return com.github.xbaimiao.shoppro.util.buildItem(material) {
             this.customModelData = custom
         }
     }
 
     override fun buildItem(player: Player): ItemStack {
-        return taboolib.platform.util.buildItem(material) {
+        return com.github.xbaimiao.shoppro.util.buildItem(material) {
             this.name = this@ItemsAdderShopItem.name
             this.lore.addAll(this@ItemsAdderShopItem.lore)
             this.customModelData = custom

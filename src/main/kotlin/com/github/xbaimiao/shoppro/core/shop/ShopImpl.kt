@@ -18,6 +18,7 @@ import taboolib.module.chat.colored
 import taboolib.module.ui.ClickType
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Basic
+import taboolib.module.ui.type.Chest
 import taboolib.platform.util.giveItem
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.sendLang

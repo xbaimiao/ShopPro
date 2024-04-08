@@ -6,9 +6,14 @@ import com.github.xbaimiao.shoppro.core.database.SQLiteDatabase
 import com.github.xbaimiao.shoppro.core.item.ItemLoaderManager
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import com.github.xbaimiao.shoppro.core.vault.DiyCurrency
+import com.github.xbaimiao.shoppro.core.vault.VaultImpl
 import com.xbaimiao.ktor.KtorPluginsBukkit
 import com.xbaimiao.ktor.KtorStat
+import org.bukkit.Bukkit
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.platform.Plugin
+import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.info
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.Configuration
@@ -33,7 +38,13 @@ object ShopPro : Plugin(), KtorStat {
         }
         ShopManager.load()
         DiyCurrency.load()
+        VaultImpl.startTask()
+
         database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
+
+        Bukkit.getOnlinePlayers().forEach {
+            database.loadPlayerData(it)
+        }
     }
 
     fun reload() {
@@ -41,7 +52,31 @@ object ShopPro : Plugin(), KtorStat {
         ShopManager.shops.clear()
         ShopManager.load()
         DiyCurrency.load()
+
+        Bukkit.getOnlinePlayers().forEach {
+            database.releasePlayerData(it)
+        }
+
         database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
+        Bukkit.getOnlinePlayers().forEach {
+            database.loadPlayerData(it)
+        }
+    }
+
+    override fun onDisable() {
+        VaultImpl.flush()
+    }
+
+    @SubscribeEvent
+    fun join(event: PlayerJoinEvent) {
+        val player = event.player
+        database.loadPlayerData(player)
+    }
+
+    @SubscribeEvent
+    fun quit(event: PlayerQuitEvent) {
+        val player = event.player
+        database.releasePlayerData(player)
     }
 
 }

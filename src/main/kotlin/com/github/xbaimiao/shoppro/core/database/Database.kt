@@ -29,4 +29,8 @@ interface Database {
 
     fun reset()
 
+    fun loadPlayerData(player: Player)
+
+    fun releasePlayerData(player: Player)
+
 }

@@ -9,7 +9,6 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
-import taboolib.library.xseries.XSkull
 import taboolib.module.chat.colored
 import taboolib.platform.util.modifyLore
 import java.util.*
@@ -49,12 +48,12 @@ class ItemImpl(
     }
 
     override fun buildItem(player: Player): ItemStack {
-        return taboolib.platform.util.buildItem(material) {
+        return com.github.xbaimiao.shoppro.util.buildItem(material) {
             this.name = this@ItemImpl.name
             this.lore.addAll(this@ItemImpl.lore)
             custom?.let { customModelData = it }
             head?.let {
-                skullTexture = XSkull.SkullTexture(it, UUID.randomUUID())
+                skullTexture = com.github.xbaimiao.shoppro.util.ItemBuilder.SkullTexture(it, UUID.randomUUID())
             }
         }
     }

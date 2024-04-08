@@ -3,6 +3,7 @@ package com.github.xbaimiao.shoppro.core.database
 import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.database.Host
 import taboolib.module.database.Table
 import javax.sql.DataSource
@@ -24,6 +25,8 @@ abstract class SqlDatabase : Database {
 
     // ServerTable 无 User
     val playerLine = "user"
+
+    private val playerAlreadyDataCache = HashMap<String, HashMap<String, LimitData>>()
 
     override fun reset() {
         serverTable.workspace(dataSource) {
@@ -50,8 +53,20 @@ abstract class SqlDatabase : Database {
         } ?: LimitData.ofNull()
     }
 
+    private fun Item.toCacheKey(): String {
+        val item = this
+        return "${item.key}-${item.material}-${if (item is ItemsAdderShopItem) item.custom else 0}"
+    }
+
     override fun getPlayerAlreadyData(player: Player, item: Item): LimitData {
-        return playerTable.workspace(dataSource) {
+        val cache = playerAlreadyDataCache[player.name] ?: error("玩家 ${player.name} 数据缓存未加载")
+
+        val cacheKey = item.toCacheKey()
+        if (cache.containsKey(cacheKey)) {
+            return cache[cacheKey]!!
+        }
+
+        val databaseLimitData = playerTable.workspace(dataSource) {
             select {
                 where {
                     playerLine eq player.uniqueId.toString()
@@ -65,6 +80,57 @@ abstract class SqlDatabase : Database {
         }.firstOrNull {
             LimitData.formString(this.getString(dataLine))
         } ?: LimitData.ofNull()
+
+        cache[cacheKey] = databaseLimitData
+        return databaseLimitData
+    }
+
+    override fun setPlayerAlreadyData(player: Player, item: Item, amount: LimitData) {
+        val cache = playerAlreadyDataCache[player.name] ?: error("玩家 ${player.name} 数据缓存未加载")
+        val cacheKey = item.toCacheKey()
+        cache[cacheKey] = amount
+
+        submitAsync {
+            if (playerTable.workspace(dataSource) {
+                    select {
+                        where {
+                            playerLine eq player.uniqueId.toString()
+                            itemKeyLine eq item.key.toString()
+                            itemMaterialLine eq item.material.toString()
+                            if (item is ItemsAdderShopItem) {
+                                itemCustomLine eq item.custom
+                            }
+                        }
+                    }
+                }.find()) {
+                playerTable.workspace(dataSource) {
+                    update {
+                        where {
+                            playerLine eq player.uniqueId.toString()
+                            itemKeyLine eq item.key.toString()
+                            itemMaterialLine eq item.material.toString()
+                            if (item is ItemsAdderShopItem) {
+                                itemCustomLine eq item.custom
+                            }
+                        }
+                        set(dataLine, amount.toString())
+                    }
+                }.run()
+            } else {
+                val custom = if (item is ItemsAdderShopItem) item.custom else 0
+                playerTable.workspace(dataSource) {
+                    insert {
+                        value(
+                            item.key.toString(),
+                            item.material.toString(),
+                            custom,
+                            amount.toString(),
+                            player.uniqueId.toString()
+                        )
+                    }
+                }.run()
+            }
+        }
     }
 
     override fun addAmount(item: Item, player: Player, amount: LimitData) {
@@ -106,46 +172,12 @@ abstract class SqlDatabase : Database {
         }
     }
 
-    override fun setPlayerAlreadyData(player: Player, item: Item, amount: LimitData) {
-        if (playerTable.workspace(dataSource) {
-                select {
-                    where {
-                        playerLine eq player.uniqueId.toString()
-                        itemKeyLine eq item.key.toString()
-                        itemMaterialLine eq item.material.toString()
-                        if (item is ItemsAdderShopItem) {
-                            itemCustomLine eq item.custom
-                        }
-                    }
-                }
-            }.find()) {
-            playerTable.workspace(dataSource) {
-                update {
-                    where {
-                        playerLine eq player.uniqueId.toString()
-                        itemKeyLine eq item.key.toString()
-                        itemMaterialLine eq item.material.toString()
-                        if (item is ItemsAdderShopItem) {
-                            itemCustomLine eq item.custom
-                        }
-                    }
-                    set(dataLine, amount.toString())
-                }
-            }.run()
-        } else {
-            val custom = if (item is ItemsAdderShopItem) item.custom else 0
-            playerTable.workspace(dataSource) {
-                insert {
-                    value(
-                        item.key.toString(),
-                        item.material.toString(),
-                        custom,
-                        amount.toString(),
-                        player.uniqueId.toString()
-                    )
-                }
-            }.run()
-        }
+    override fun loadPlayerData(player: Player) {
+        playerAlreadyDataCache[player.name] = HashMap()
+    }
+
+    override fun releasePlayerData(player: Player) {
+        playerAlreadyDataCache.remove(player.name)
     }
 
 }

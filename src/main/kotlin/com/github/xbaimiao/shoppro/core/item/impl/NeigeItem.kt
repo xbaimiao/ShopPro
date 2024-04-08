@@ -3,7 +3,6 @@ package com.github.xbaimiao.shoppro.core.item.impl
 import com.github.xbaimiao.shoppro.core.item.Item
 import com.github.xbaimiao.shoppro.core.item.ItemLoader
 import com.github.xbaimiao.shoppro.core.shop.Shop
-import ink.ptms.zaphkiel.Zaphkiel
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
@@ -19,14 +18,14 @@ import pers.neige.neigeitems.manager.ItemManager
 class NeigeItem(
     private val neigeItem: ItemGenerator,
     itemSetting: ItemSetting,
-    private val neigeId :String
+    private val neigeId: String
 ) : VanillaShopItem(itemSetting) {
 
     override val material: Material
         get() = neigeItem.staticItemStack.type
 
     override fun vanillaItem(player: Player): ItemStack {
-        return ItemManager.getItemStack(neigeId,player)!!
+        return ItemManager.getItemStack(neigeId, player)!!
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
@@ -42,8 +41,8 @@ class NeigeItem(
                 error("NeigeItems Plugin not found")
             }
             val neigeId = section.getString("material")!!.substring(prefix.length + 1)
-            val item = ItemManager.getItem(neigeId)?: error("NeigeItems $neigeId not found")
-            return NeigeItem(item, section.toItemSetting(char, shop),neigeId)
+            val item = ItemManager.getItem(neigeId) ?: error("NeigeItems $neigeId not found")
+            return NeigeItem(item, section.toItemSetting(char, shop), neigeId)
         }
 
         override fun parseToMaterial(section: ConfigurationSection): Material {

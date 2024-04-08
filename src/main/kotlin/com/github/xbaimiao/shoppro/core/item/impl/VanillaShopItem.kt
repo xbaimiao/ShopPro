@@ -12,7 +12,7 @@ import taboolib.platform.util.hasLore
 open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
 
     override fun vanillaItem(player: Player): ItemStack {
-        return taboolib.platform.util.buildItem(material)
+        return com.github.xbaimiao.shoppro.util.buildItem(material)
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
@@ -20,7 +20,7 @@ open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
     }
 
     override fun buildItem(player: Player): ItemStack {
-        return taboolib.platform.util.buildItem(material) {
+        return com.github.xbaimiao.shoppro.util.buildItem(material) {
             this.name = this@VanillaShopItem.name
             this.lore.addAll(this@VanillaShopItem.lore)
         }

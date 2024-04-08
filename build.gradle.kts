@@ -19,6 +19,8 @@ taboolib {
         contributors {
             name("xbaimiao")
         }
+        val bukkitNodes = bukkitNodes as MutableMap<Any, Any>
+        bukkitNodes["update-info"] = "数据库添加缓存 优化性能"
     }
     env {
         install(NMS_UTIL, UI)
@@ -39,6 +41,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("com.mojang:authlib:1.5.25")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("public:MythicMobs:4.14.1")
     compileOnly("public:papi:1.0.0")
