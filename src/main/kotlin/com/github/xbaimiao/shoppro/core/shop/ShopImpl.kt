@@ -14,11 +14,11 @@ import org.bukkit.configuration.Configuration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.info
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.chat.colored
 import taboolib.module.ui.ClickType
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Basic
-import taboolib.module.ui.type.Chest
 import taboolib.platform.util.giveItem
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.sendLang
@@ -242,8 +242,10 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
         }
 
         shopItem.currency.giveMoney(player, shopItem.price * amount)
-        if (shopItem.isLimit()) {
-            ShopPro.database.addAmount(shopItem, player, LimitData(0L, amount.toLong()))
+        submitAsync {
+            if (shopItem.isLimit()) {
+                ShopPro.database.addAmount(shopItem, player, LimitData(0L, amount.toLong()))
+            }
         }
         Bukkit.getPluginManager().callEvent(ShopProSellEvent(shopItem, amount, player))
         player.sendLang("sell-item", amount, shopItem.name, shopItem.price * amount)
