@@ -36,8 +36,8 @@ object ShopPro : Plugin(), KtorStat {
             info("$userId 感谢您的使用")
             stat()
         }
-        ShopManager.load()
         DiyCurrency.load()
+        ShopManager.load()
         VaultImpl.startTask()
 
         database = if (config.getBoolean("mysql.enable")) MysqlDatabase(config) else SQLiteDatabase()
@@ -50,8 +50,8 @@ object ShopPro : Plugin(), KtorStat {
     fun reload() {
         config.reload()
         ShopManager.shops.clear()
-        ShopManager.load()
         DiyCurrency.load()
+        ShopManager.load()
 
         Bukkit.getOnlinePlayers().forEach {
             database.releasePlayerData(it)
