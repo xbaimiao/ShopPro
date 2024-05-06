@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.info
 import taboolib.platform.BukkitPlugin
+import taboolib.platform.compat.replacePlaceholder
 import java.io.File
 
 class DiyCurrency(configuration: Configuration) : Currency {
@@ -70,7 +71,7 @@ class DiyCurrency(configuration: Configuration) : Currency {
     }
 
     private fun replace(string: String, player: Player, num: Double): String {
-        return string.replace("%player%", player.name).replace("%num%", num.toString())
+        return string.replace("%player%", player.name).replace("%num%", num.toString()).replacePlaceholder(player)
     }
 
 }

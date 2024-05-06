@@ -20,7 +20,7 @@ taboolib {
             name("xbaimiao")
         }
         val bukkitNodes = bukkitNodes as MutableMap<Any, Any>
-        bukkitNodes["update-info"] = "修复自定义货币问题"
+        bukkitNodes["update-info"] = "fix diy currency"
     }
     env {
         install(NMS_UTIL, UI)
