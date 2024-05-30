@@ -15,7 +15,7 @@ import java.util.*
 class HeadShopItem(
     headString: String,
     itemSetting: ItemSetting,
-    val item: Material
+    val item: Material,
 ) : ShopItem(itemSetting) {
 
     override val material: Material = XMaterial.PLAYER_HEAD.parseMaterial()!!
@@ -57,7 +57,7 @@ class HeadShopItem(
         }
 
         override fun parseToMaterial(section: ConfigurationSection): Material {
-            return section.getString("item")!!.parseToMaterial()
+            return section.getString("item")?.parseToMaterial() ?: Material.BARRIER
         }
 
     }
