@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.mojang:authlib:1.5.25")
+    compileOnly("com.mojang:authlib:3.16.29")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("public:MythicMobs:4.14.1")
     compileOnly("public:papi:1.0.0")

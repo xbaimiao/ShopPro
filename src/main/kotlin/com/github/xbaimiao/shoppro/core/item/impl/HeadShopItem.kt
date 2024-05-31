@@ -52,7 +52,7 @@ class HeadShopItem(
             return HeadShopItem(
                 section.getString("material")!!,
                 section.toItemSetting(char, shop),
-                section.getString("item")!!.parseToMaterial()
+                parseToMaterial(section)
             )
         }
 
