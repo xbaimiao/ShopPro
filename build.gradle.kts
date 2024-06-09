@@ -20,7 +20,7 @@ taboolib {
             name("xbaimiao")
         }
         val bukkitNodes = bukkitNodes as MutableMap<Any, Any>
-        bukkitNodes["update-info"] = "修复头颅物品"
+        bukkitNodes["update-info"] = "添加API 可供其他插件添加物品解析"
     }
     env {
         install(NMS_UTIL, UI)
@@ -52,7 +52,6 @@ dependencies {
     compileOnly("public:Zaphkiel:1.0.0")
     compileOnly("pers.neige.neigeitems:NeigeItems:1.15.113")
     compileOnly("public:MMOItems:6.9.4")
-    taboo("com.xbaimiao.ktor:ktor-plugins-bukkit:1.0.8")
 //    taboo(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }

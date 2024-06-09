@@ -1,5 +1,6 @@
 package com.github.xbaimiao.shoppro
 
+import com.github.xbaimiao.shoppro.api.ShopProInitItemLoaderEvent
 import com.github.xbaimiao.shoppro.core.database.Database
 import com.github.xbaimiao.shoppro.core.database.MysqlDatabase
 import com.github.xbaimiao.shoppro.core.database.SQLiteDatabase
@@ -7,8 +8,6 @@ import com.github.xbaimiao.shoppro.core.item.ItemLoaderManager
 import com.github.xbaimiao.shoppro.core.shop.ShopManager
 import com.github.xbaimiao.shoppro.core.vault.DiyCurrency
 import com.github.xbaimiao.shoppro.core.vault.VaultImpl
-import com.xbaimiao.ktor.KtorPluginsBukkit
-import com.xbaimiao.ktor.KtorStat
 import org.bukkit.Bukkit
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -19,7 +18,7 @@ import taboolib.module.configuration.Config
 import taboolib.module.configuration.Configuration
 import taboolib.platform.BukkitPlugin
 
-object ShopPro : Plugin(), KtorStat {
+object ShopPro : Plugin() {
 
     @Config(value = "config.yml")
     lateinit var config: Configuration
@@ -30,12 +29,8 @@ object ShopPro : Plugin(), KtorStat {
     val itemLoaderManager = ItemLoaderManager()
 
     override fun onActive() {
-        val userId = kotlin.runCatching { userId }.getOrNull()
-        if (userId != null) {
-            KtorPluginsBukkit.init(BukkitPlugin.getInstance(), this)
-            info("$userId 感谢您的使用")
-            stat()
-        }
+        ShopProInitItemLoaderEvent(this).call()
+
         DiyCurrency.load()
         ShopManager.load()
         VaultImpl.startTask()
