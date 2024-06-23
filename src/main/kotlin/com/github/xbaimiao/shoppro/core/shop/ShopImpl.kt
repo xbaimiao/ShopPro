@@ -23,11 +23,26 @@ import taboolib.platform.util.giveItem
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.sendLang
 import taboolib.platform.util.takeItem
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ShopImpl(private val configuration: Configuration) : Shop() {
 
     private val slots = configuration.getStringList("slots").map { it.toCharArray().toList() }
+    private val clickCache = WeakHashMap<Player, Long>()
+
+    private fun canClick(player: Player): Boolean {
+        val lastClick = clickCache[player]
+        if (lastClick == null) {
+            clickCache[player] = System.currentTimeMillis()
+            return true
+        }
+        if (System.currentTimeMillis() - lastClick < 200) {
+            return false
+        }
+        clickCache[player] = System.currentTimeMillis()
+        return true
+    }
 
     private val items = ArrayList<Item>()
 
@@ -104,6 +119,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                 if (item is ShopItem) {
                     if (getType() == ShopType.BUY) {
                         onClick(item.key) { event ->
+                            if (!canClick(player)) {
+                                return@onClick
+                            }
                             if (event.clickType != ClickType.CLICK) {
                                 return@onClick
                             }
@@ -120,6 +138,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                     }
                     if (getType() == ShopType.SELL) {
                         onClick(item.key) { event ->
+                            if (!canClick(player)) {
+                                return@onClick
+                            }
                             if (event.clickType != ClickType.CLICK) {
                                 return@onClick
                             }
@@ -144,6 +165,9 @@ class ShopImpl(private val configuration: Configuration) : Shop() {
                     }
                 } else {
                     onClick(item.key) {
+                        if (!canClick(player)) {
+                            return@onClick
+                        }
                         item.exeCommands(player, 1)
                     }
                 }
