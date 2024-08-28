@@ -38,6 +38,7 @@ abstract class ItemLoader {
             lore = this.getStringList("lore").colored(),
             vanilla = this.getBoolean("vanilla", true),
             commands = this.getStringList("commands"),
+            data = this.getInt("data"),
             shop = shop,
             script = this.getString("condition"),
             price = this.getDouble("price"),

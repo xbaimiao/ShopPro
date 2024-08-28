@@ -25,6 +25,8 @@ items:
     # 您可在 currencys 里自定义货币
     currency: points
     name: '石头'
+    # data为低版本特有的 data区分material
+#    data: 1
     # 每日限购买
     limit: 5000
     # 每个玩家限购买

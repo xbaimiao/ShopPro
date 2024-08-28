@@ -29,10 +29,14 @@ class HeadShopItem(
     override fun vanillaItem(player: Player): ItemStack {
         return com.github.xbaimiao.shoppro.util.buildItem(material) {
             skullTexture = com.github.xbaimiao.shoppro.util.ItemBuilder.SkullTexture(head, UUID.randomUUID())
+            damage = data
         }
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
+        if (data != 0 && itemStack.durability.toInt() != data) {
+            return false
+        }
         return itemStack.itemMeta?.hasLore() == false && itemStack.type == item
     }
 
@@ -41,6 +45,7 @@ class HeadShopItem(
             this.name = this@HeadShopItem.name
             this.lore.addAll(this@HeadShopItem.lore)
             skullTexture = com.github.xbaimiao.shoppro.util.ItemBuilder.SkullTexture(head, UUID.randomUUID())
+            damage = data
         }
     }
 

@@ -1,6 +1,7 @@
 package com.github.xbaimiao.shoppro.core.database
 
 import com.github.xbaimiao.shoppro.core.item.Item
+import com.github.xbaimiao.shoppro.core.item.ShopItem
 import com.github.xbaimiao.shoppro.core.item.impl.ItemsAdderShopItem
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
@@ -55,7 +56,7 @@ abstract class SqlDatabase : Database {
 
     private fun Item.toCacheKey(): String {
         val item = this
-        return "${item.key}-${item.material}-${if (item is ItemsAdderShopItem) item.custom else 0}"
+        return "${item.key}-${item.material}-${if (item is ItemsAdderShopItem) item.custom else 0}-${if (item is ShopItem) item.data else 0}"
     }
 
     override fun getPlayerAlreadyData(player: Player, item: Item): LimitData {

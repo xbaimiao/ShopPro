@@ -12,10 +12,15 @@ import taboolib.platform.util.hasLore
 open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
 
     override fun vanillaItem(player: Player): ItemStack {
-        return com.github.xbaimiao.shoppro.util.buildItem(material)
+        return com.github.xbaimiao.shoppro.util.buildItem(material) {
+            damage = data
+        }
     }
 
     override fun equal(itemStack: ItemStack): Boolean {
+        if (data != 0 && itemStack.durability.toInt() != data) {
+            return false
+        }
         return itemStack.type == material && !itemStack.hasLore()
     }
 
@@ -23,6 +28,7 @@ open class VanillaShopItem(itemSetting: ItemSetting) : ShopItem(itemSetting) {
         return com.github.xbaimiao.shoppro.util.buildItem(material) {
             this.name = this@VanillaShopItem.name
             this.lore.addAll(this@VanillaShopItem.lore)
+            this.damage = data
         }
     }
 

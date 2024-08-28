@@ -20,7 +20,7 @@ taboolib {
             name("xbaimiao")
         }
         val bukkitNodes = bukkitNodes as MutableMap<Any, Any>
-        bukkitNodes["update-info"] = "修复提示信息错误"
+        bukkitNodes["update-info"] = "支持1.12.2物品附加值"
     }
     env {
         install(NMS_UTIL, UI)
